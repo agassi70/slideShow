@@ -1,73 +1,88 @@
-const images = ['photo1.jpg', 'photo2.jpg', 'photo3.jpg', 'photo4.jpg', 'photo5.jpg',
-    'photo6.jpg', 'photo7.jpg', 'photo8.jpg'];
-
 const body = document.querySelector('body');
 const container = document.querySelector('#container');
-body.style.height = document.documentElement.clientHeight + 'px';
-const width = container.style.width = body.offsetWidth * 90 / 100 + 'px';
-const height = container.style.height = body.offsetHeight * 90 / 100 + 'px';
+const bodyHeight = body.style.height = document.documentElement.clientHeight + 'px';
+const height = container.style.height = parseInt(bodyHeight) * 96 /100 + 'px';
+const width = container.style.width = parseInt(height) * 1920 / 1080 + 'px';
 
-const imgElements = createImgElements();
-
+let images = [];
+let img;
 let offsetX = 0;
 let offsetY = 0;
 let angle = 0;
 
-episode1()
-    .then(episode2)
-    .then(episode3);
+for (let i = 1; i < 145; i++) {
+    images[i] = `images(${i}).jpg`;
+}
+
+const imgElements = createImgElements();
+
+episode1(1)
+    .then(() => episode2(1))
+    .then(episode3)
+    .then(episode4)
+    .then(() => episode1(10))
+    .then(() => episode2(10))
+    .then(() => episode5(15));
 
 function createImgElements() {
     let imgElements = images.map(image => {
         const el = document.createElement('div');
         el.classList.add('wrapper');
-        el.innerHTML = `<img src="./images/${image}"  width="800" height="530">`;
+        el.innerHTML = `<img src="./images/${image}"  width="800" height="450">`;
         return el;
     });
     return imgElements;
 }
 
-function episode1() {
+function addFullSizeImage(number) {
+    container.appendChild(imgElements[number]);
+    img = imgElements[number].querySelector('img');
+    img.style.width = width;
+    img.style.height = height;
+}
+
+function episode1(number) {
     return new Promise(resolve => {
-        let counter = 0;
+        let counter = number;
         const timer = setInterval(() => {
             container.appendChild(imgElements[counter]);
 
             switch (counter) {
-                case 0:
-                    offsetX = 0;
-                    offsetY = 50;
-                    break;
-                case 1:
-                    offsetX = 100;
-                    offsetY = 50;
-                    angle = -10;
-                    break;
-                case 2:
-                    offsetX = 150;
-                    offsetY = 50;
-                    angle = 10;
-                    break;
-                case 3:
-                    offsetX = 200;
-                    offsetY = 50;
-                    angle = -15;
-                    break;
-                case 4:
+                case (number):
                     offsetX = 50;
                     offsetY = 60;
+                    break;
+                case (number + 1):
+                    offsetX = 100;
+                    offsetY = 60;
+                    angle = -10;
+                    break;
+                case (number + 2):
+                    offsetX = 150;
+                    offsetY = 60;
+                    angle = 10;
+                    break;
+                case (number + 3):
+                    offsetX = 200;
+                    offsetY = 60;
+                    angle = -15;
+                    break;
+                case (number + 4):
+                    offsetX = 50;
+                    offsetY = 70;
                     angle = 3;
                     break;
             }
 
             imgElements[counter].animate({
-                transform: ['translate(-800px, 800px)', `translate(${offsetX}px, ${offsetY}px) rotate(${angle}deg`]
+                transform: ['translate(-800px, 800px) rotate(-60deg)',
+                    `translate(${offsetX}px, ${offsetY}px) rotate(${angle}deg`]
             }, {
-                duration: 250,
+                duration: 300,
                 fill: 'forwards'
             });
 
-            if (++counter >= 5) {
+            if (++counter > (number + 4)) {
                 clearInterval(timer);
                 resolve();
             }
@@ -75,14 +90,14 @@ function episode1() {
     });
 }
 
-function episode2() {
+function episode2(number) {
     return new Promise(resolve => {
-        let counter = 4;
+        let counter = number + 4;
 
         const timer = setInterval(() => {
-            let op = counter === 0 ? 1 : 0;
+            let op = counter === number ? 1 : 0;
 
-            if (counter !== 4) {
+            if (counter !== (number + 4)) {
                 imgElements[counter + 1].remove();
             }
 
@@ -95,46 +110,161 @@ function episode2() {
                 fill: 'forwards'
             });
 
-            if (--counter < 0) {
+            if (--counter < number) {
                 clearInterval(timer);
-                setTimeout(resolve, 3000);
+                setTimeout(resolve, 2000);
             }
         }, 1200)
     });
 }
 
 function episode3() {
-    let img;
-    imgElements[0].remove();
-    container.appendChild(imgElements[5]);
-    img = imgElements[5].querySelector('img');
-    img.style.width = width;
-    img.style.height = height;
+    imgElements[1].remove();
+    addFullSizeImage(6);
 
-    setTimeout(() => {
-        container.appendChild(imgElements[6]);
-        img = imgElements[6].querySelector('img');
-        img.style.width = width;
-        img.style.height = height;
+    return new Promise(resolve => {
+        setTimeout(() => {
+            addFullSizeImage(7);
 
-        imgElements[6].animate({
-            transform: [`translateX(-${width})`, `translateX(-${parseInt(width) / 2}px)`],
+            addFullSizeImage(8);
+
+            imgElements[7].animate({
+                transform: [`translateX(-${width})`,
+                    `translateX(-${parseInt(width) / 2}px)`,
+                    `translateX(-${parseInt(width) / 2}px)`,
+                    `translateX(-${parseInt(width) / 2}px)`,
+                    `translateX(-${parseInt(width) * 0.8}px)`],
+            }, {
+                duration: 3000,
+                fill: 'forwards'
+            });
+
+
+            imgElements[8].animate({
+                transform: [`translateX(${width})`,
+                    `translateX(${parseInt(width) / 2}px)`,
+                    `translateX(${parseInt(width) / 2}px)`,
+                    `translateX(${parseInt(width) / 2}px)`,
+                    `translateX(${parseInt(width) * 0.8}px)`],
+            }, {
+                duration: 3000,
+                fill: 'forwards'
+            });
+
+            setTimeout(resolve, 3000);
+        }, 1000);
+    });
+}
+
+function episode4() {
+    container.appendChild(imgElements[9]);
+    img = imgElements[9].querySelector('img');
+    img.style.width = parseInt(width) * 0.59 + 'px';
+    img.style.height = parseInt(height) * 0.6 + 'px';
+
+    imgElements[9].animate({
+        transform: [`translate(${parseInt(width) * 0.205}px, ${height})`,
+            `translate(${parseInt(width) * 0.205}px, ${-parseInt(height) * 0.65}px)`],
+    }, {
+        duration: 3600,
+        fill: 'forwards'
+    });
+
+    return new Promise(resolve => {
+        setTimeout(() => {
+            imgElements[6].remove();
+            imgElements[7].remove();
+            imgElements[8].remove();
+            imgElements[9].remove();
+
+            addFullSizeImage(8);
+            imgElements[8].animate({
+                transform: [`translate(${width})`, `translate(0)`, `translate(${width})`],
+            }, {
+                duration: 2000,
+                fill: 'forwards'
+            });
+
+            addFullSizeImage(7);
+            imgElements[7].animate({
+                transform: [`translate(-${width})`, `translate(0)`],
+            }, {
+                duration: 1000,
+                delay: 1000,
+                fill: 'forwards'
+            });
+
+            setTimeout(() => {
+                imgElements[7].remove();
+                imgElements[8].remove();
+                resolve();
+            }, 2200);
+
+        }, 3600);
+    })
+}
+
+function episode5(number) {
+    imgElements[10].remove();
+    let counter = number;
+    let dur = 300;
+    let endY = 60;
+    let startX, startY, endX;
+    let startAngle, endAngle, startScale, endScale;
+
+    const timer = setInterval(() => {
+        switch (counter) {
+            case (number):
+                startX = 0;
+                startY = - 800;
+                endX = 50;
+                startScale = 1;
+                endScale = 1;
+                startAngle = 15;
+                endAngle = -3;
+                break;
+            case (number + 1):
+                startX = -500;
+                startY = 0;
+                endX = 50;
+                startScale = 0.5;
+                endScale = 1;
+                startAngle = -5;
+                endAngle = 5;
+                break;
+            case (number + 2):
+                startX = 800;
+                startY = 0;
+                endX = 50;
+                startScale = 0.5;
+                endScale = 1;
+                startAngle = 5;
+                endAngle = -5;
+                break;
+            case (number + 3):
+                startX = 800;
+                startY = 0;
+                endX = 0;
+                startScale = 0.5;
+                endScale = 1.8;
+                startAngle = 15;
+                endAngle = 0;
+                dur = 4600;
+                break;
+
+        }
+
+        container.appendChild(imgElements[counter]);
+        imgElements[counter].animate({
+            transform: [`translate(${startX}px, ${startY}px) rotate(${startAngle}deg) scale(${startScale})`,
+                `translate(${endX}px, ${endY}px) rotate(${endAngle}deg) scale(${endScale})`],
         }, {
-            duration: 1000,
+            duration: dur,
             fill: 'forwards'
         });
 
-        container.appendChild(imgElements[7]);
-        img = imgElements[7].querySelector('img');
-        img.style.width = width;
-        img.style.height = height;
-
-        imgElements[7].animate({
-            transform: [`translateX(${width})`, `translateX(${parseInt(width) / 2}px)`],
-        }, {
-            duration: 1000,
-            fill: 'forwards'
-        });
-
-    }, 1500);
+        if (++counter > number + 3) {
+            clearInterval(timer);
+        }
+    }, 1000);
 }
