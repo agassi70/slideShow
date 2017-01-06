@@ -16,6 +16,8 @@ for (let i = 1; i < 145; i++) {
 
 const imgElements = createImgElements();
 
+document.querySelector('#player').play();
+
 episode1(1)
     .then(() => episode2(1))
     .then(episode3)
@@ -538,5 +540,6 @@ function episode9() {
             duration: 2000,
             fill: 'forwards'
         });
+        document.querySelector('#player').stop();
     }, 13000);
 }
