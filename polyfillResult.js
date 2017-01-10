@@ -8170,6 +8170,18 @@
 	
 	var body = document.querySelector('body');
 	var container = document.querySelector('#container');
+	
+	var animation = {};
+	var functions = [episode1.bind(null, 1), episode2.bind(null, 1), episode3, episode4, episode4_2, episode1.bind(null, 10), episode2.bind(null, 10), episode5, episode5_2, episode6, episode7, episode8, episode8_2, episode9, episode10, episode11, episode12, episode13, episode14, episode15];
+	var episodes = [0, 7.5, 15.5, 19.8, 23.3, 27.3, 35.4, 43.4, 54.8, 57.3, 65.9, 75.5, 89.1, 99.3, 108, 133, 152.6, 160.5, 172.5, 185.6];
+	
+	var btnPlay = document.querySelector('.btn.play');
+	var btnPause = document.querySelector('.btn.pause');
+	var btnVolume = document.querySelector('.btn.volume');
+	var player = document.querySelector('#player');
+	
+	//const player = new Audio('assets/Abschnittsmusik.ogg');
+	
 	var bodyWidth = void 0;
 	var bodyHeight = void 0;
 	var height = void 0;
@@ -8180,7 +8192,7 @@
 	var offsetX = 0;
 	var offsetY = 0;
 	var angle = 0;
-	var animation = {};
+	var animationTime = 0;
 	
 	resizeWindow();
 	
@@ -8192,24 +8204,127 @@
 	
 	window.addEventListener('resize', resizeWindow);
 	
-	document.querySelector('#player').play();
+	btnPlay.setAttribute('disabled', 'disabled');
 	
-	episode1(1).then(function () {
-	    return episode2(1);
-	}).then(episode3).then(episode4).then(function () {
-	    return episode1(10);
-	}).then(function () {
-	    return episode2(10);
-	}).then(episode5).then(episode6).then(episode7).then(episode8).then(episode9).then(episode10).then(episode11).then(episode12).then(episode13).then(episode14).then(episode15);
+	btnPlay.addEventListener('click', function () {
+	    var promise = functions[animation.func]();
+	    for (var _i = animation.func + 1; _i < 20; _i++) {
+	        promise = promise.then(functions[_i]);
+	    }
+	
+	    player.play();
+	    player.addEventListener('canplay', setTime.bind(null, episodes[animation.func]));
+	    btnPlay.setAttribute('disabled', 'disabled');
+	    btnPause.removeAttribute('disabled');
+	});
+	
+	btnPause.addEventListener('click', function () {
+	    animation.anims.forEach(function (animation) {
+	        return animation.pause();
+	    });
+	    animation.timersInterval.forEach(function (timer) {
+	        return clearInterval(timer);
+	    });
+	    animation.timersTimeout.forEach(function (timer) {
+	        return clearTimeout(timer);
+	    });
+	    btnPlay.removeAttribute('disabled');
+	    player.removeEventListener('canplay', setTime);
+	    player.pause();
+	    btnPause.setAttribute('disabled', 'disabled');
+	});
+	
+	document.querySelector('.btn.fullsize').addEventListener('click', function () {
+	    if (container.requestFullscreen) {
+	        container.requestFullscreen();
+	    } else if (container.webkitRequestFullscreen) {
+	        container.webkitRequestFullscreen();
+	    } else if (container.mozRequestFullScreen) {
+	        container.mozRequestFullScreen();
+	    } else if (container.msRequestFullscreen) {
+	        container.msRequestFullscreen();
+	    }
+	});
+	
+	btnVolume.addEventListener('click', function () {
+	    player.volume = player.volume === 1 ? 0 : 1;
+	
+	    if (player.volume === 1) {
+	        btnVolume.classList.remove('translate');
+	        btnVolume.classList.add('no-translate');
+	    } else {
+	        btnVolume.classList.remove('no-translate');
+	        btnVolume.classList.add('translate');
+	    }
+	});
+	
+	document.querySelector('.btn.forward').addEventListener('click', function () {
+	    var currentFunc = animation.func;
+	    if (currentFunc === functions.length - 1) {
+	        return;
+	    }
+	    //    setTime(episodes[currentFunc + 1]);
+	    animation.anims.forEach(function (animation) {
+	        return animation.finish();
+	    });
+	    animation.timersInterval.forEach(function (timer) {
+	        return clearInterval(timer);
+	    });
+	    animation.timersTimeout.forEach(function (timer) {
+	        return clearTimeout(timer);
+	    });
+	
+	    var promise = functions[currentFunc + 1]();
+	    for (var _i2 = currentFunc + 2; _i2 < 20; _i2++) {
+	        promise = promise.then(functions[_i2]);
+	    }
+	});
+	
+	document.querySelector('.btn.backward').addEventListener('click', function () {
+	    var currentFunc = animation.func;
+	    if (currentFunc === 0) {
+	        return;
+	    }
+	    // setTime(episodes[currentFunc - 1]);
+	    animation.anims.forEach(function (animation) {
+	        return animation.finish();
+	    });
+	    animation.timersInterval.forEach(function (timer) {
+	        return clearInterval(timer);
+	    });
+	    animation.timersTimeout.forEach(function (timer) {
+	        return clearTimeout(timer);
+	    });
+	
+	    var promise = functions[currentFunc - 1]();
+	    for (var _i3 = currentFunc; _i3 < 20; _i3++) {
+	        promise = promise.then(functions[_i3]);
+	    }
+	});
+	
+	player.play();
+	player.volume = 1;
+	btnVolume.classList.add('no-translate');
+	
+	var promise = functions[0]();
+	for (var _i4 = 1; _i4 < 20; _i4++) {
+	    promise = promise.then(functions[_i4], function (err) {
+	        return console.log(err);
+	    });
+	}
+	
+	function setTime(time) {
+	    player.currentTime = time;
+	}
 	
 	function resizeWindow() {
 	    bodyHeight = document.documentElement.clientHeight + 'px';
 	    bodyWidth = document.documentElement.clientWidth + 'px';
-	    height = parseInt(bodyHeight) * 96 / 100 + 'px';
+	    height = parseInt(bodyHeight) * 98 / 100 + 'px';
 	    width = parseInt(height) * 1920 / 1080 + 'px';
 	
-	    if (width > bodyWidth) {
-	        width = parseInt(bodyWidth) * 0.9 + 'px';
+	    if (parseInt(width) > parseInt(bodyWidth) * 0.94) {
+	        width = parseInt(bodyWidth) * 0.95 + 'px';
 	        height = parseInt(width) * 1080 / 1920 + 'px';
 	    }
 	    body.style.height = bodyHeight;
@@ -8241,16 +8356,32 @@
 	function addImage(number) {
 	    container.appendChild(imgElements[number]);
 	    img = imgElements[number].querySelector('img');
+	    if (!img) {
+	        imgElements[number].innerHTML = '<img src="./images/images(' + number + ').jpg">';
+	        img = imgElements[number].querySelector('img');
+	    }
 	    img.style.width = parseInt(width) * 0.65 + 'px';
 	    img.style.height = parseInt(height) * 0.65 + 'px';
 	}
 	
 	function episode1(number) {
+	    animation.func = number === 1 ? 0 : 5;
+	    animation.anims = [];
+	    animation.timersInterval = [];
+	    animation.timersTimeout = [];
+	    container.innerHTML = '';
+	    var cloneCont = container.cloneNode(true);
+	    container.appendChild(cloneCont);
+	    cloneCont.style.position = 'absolute';
+	    cloneCont.style.background = 'url("./images/images(' + number + ').jpg") no-repeat 50% 50% /280%';
+	    animation.anims.push(cloneCont.animate({
+	        transform: ['rotate(0)', 'rotate(-2deg)', 'rotate(4deg) scale(1.2)']
+	    }, 7500));
 	    return new Promise(function (resolve) {
 	        var counter = number;
 	        offsetY = parseInt(height) * 0.2;
+	
 	        var timer = setInterval(function () {
-	            container.style.background = 'url("./images/images(' + number + ').jpg") no-repeat 50% 50% /250%';
 	            addImage(counter);
 	
 	            switch (counter) {
@@ -8275,37 +8406,49 @@
 	                    break;
 	            }
 	
-	            animation['animate' + counter] = imgElements[counter].animate({
+	            animation.anims.push(imgElements[counter].animate({
 	                transform: ['translate(-' + width + ', ' + height + ') rotate(-60deg)', 'translate(' + offsetX + 'px, ' + offsetY + 'px) rotate(' + angle + 'deg']
 	            }, {
 	                duration: 500,
 	                fill: 'forwards'
-	            });
+	            }));
 	
 	            if (++counter > number + 4) {
 	                clearInterval(timer);
-	                setTimeout(function () {
-	                    container.style.background = '';
-	                }, 8000);
-	                setTimeout(resolve, 1500);
+	                var timer2 = setTimeout(resolve, 1500);
+	                animation.timersTimeout.push(timer2);
 	            }
 	        }, 1300);
+	        animation.timersInterval.push(timer);
 	    });
 	}
 	
 	function episode2(number) {
+	    animation.func = number === 1 ? 1 : 6;
+	    animation.anims = [];
+	    animation.timersInterval = [];
+	    animation.timersTimeout = [];
+	    container.innerHTML = '';
+	    var cloneCont = container.cloneNode(true);
+	    container.appendChild(cloneCont);
+	    cloneCont.style.position = 'absolute';
+	    cloneCont.style.background = 'url("./images/images(' + number + ').jpg") no-repeat 50% 50% /280%';
+	    animation.anims.push(cloneCont.animate({
+	        transform: ['rotate(0)', 'rotate(-2deg)', 'rotate(4deg) scale(1.2)']
+	    }, 7500));
+	
+	    for (var _i5 = number; _i5 < number + 5; _i5++) {
+	        addImage(_i5);
+	    }
+	
 	    var filter = number === 1 ? '0' : '100%';
 	    return new Promise(function (resolve) {
 	        var counter = number + 4;
 	
-	        var timer = setInterval(function () {
+	        var timer2 = setInterval(function () {
 	            var op = counter === number ? 1 : 0;
 	
-	            if (counter !== number + 4) {
-	                container.removeChild(imgElements[counter + 1]);
-	            }
-	
-	            imgElements[counter].animate({
+	            animation.anims.push(imgElements[counter].animate({
 	                transform: ['translate(' + offsetX + 'px, ' + offsetY + 'px) scale(1)', 'translate(' + offsetX + 'px, ' + offsetY + 'px) scale(2.5)'],
 	                opacity: [1, op],
 	                filter: ['grayscale(' + filter + ')', 'grayscale(0)']
@@ -8313,89 +8456,117 @@
 	                duration: 1000,
 	                easing: 'ease-in',
 	                fill: 'forwards'
-	            });
+	            }));
 	
 	            if (--counter < number) {
-	                clearInterval(timer);
-	                setTimeout(resolve, 1000);
+	                clearInterval(timer2);
+	                var timer3 = setTimeout(resolve, 1000);
+	                animation.timersTimeout.push(timer3);
 	            }
 	        }, 1400);
+	        animation.timersInterval.push(timer2);
 	    });
 	}
 	
 	function episode3() {
-	    container.removeChild(imgElements[1]);
+	    animation.func = 2;
+	    animation.anims = [];
+	    animation.timersInterval = [];
+	    animation.timersTimeout = [];
+	    container.innerHTML = '';
 	    addFullSizeImage(6);
 	
 	    return new Promise(function (resolve) {
-	        setTimeout(function () {
+	        var timer1 = setTimeout(function () {
 	            addFullSizeImage(7);
-	
 	            addFullSizeImage(8);
 	
-	            imgElements[7].animate({
+	            animation.anims.push(imgElements[7].animate({
 	                transform: ['translateX(-' + width + ')', 'translateX(-' + parseInt(width) / 2 + 'px)', 'translateX(-' + parseInt(width) / 2 + 'px)', 'translateX(-' + parseInt(width) / 2 + 'px)', 'translateX(-' + parseInt(width) * 0.8 + 'px)']
 	            }, {
 	                duration: 3000,
 	                fill: 'forwards'
-	            });
+	            }));
 	
-	            imgElements[8].animate({
+	            animation.anims.push(imgElements[8].animate({
 	                transform: ['translateX(' + width + ')', 'translateX(' + parseInt(width) / 2 + 'px)', 'translateX(' + parseInt(width) / 2 + 'px)', 'translateX(' + parseInt(width) / 2 + 'px)', 'translateX(' + parseInt(width) * 0.8 + 'px)']
 	            }, {
 	                duration: 3000,
 	                fill: 'forwards'
-	            });
+	            }));
 	
-	            setTimeout(resolve, 3000);
+	            var timer2 = setTimeout(resolve, 3100);
+	            animation.timersTimeout.push(timer2);
 	        }, 1200);
+	        animation.timersTimeout.push(timer1);
 	    });
 	}
 	
 	function episode4() {
+	    animation.func = 3;
+	    animation.anims = [];
+	    animation.timersInterval = [];
+	    animation.timersTimeout = [];
+	    container.innerHTML = '';
+	    addFullSizeImage(6);
+	    addFullSizeImage(7);
+	    addFullSizeImage(8);
+	
 	    addImage(9);
 	    img = imgElements[9].querySelector('img');
 	    img.style.width = parseInt(width) * 0.6 + 'px';
 	    img.style.height = parseInt(height) * 0.6 + 'px';
 	
-	    imgElements[9].animate({
+	    animation.anims.push(imgElements[9].animate({
 	        transform: ['translate(' + parseInt(width) * 0.2 + 'px, ' + height + ')', 'translate(' + parseInt(width) * 0.2 + 'px, ' + -parseInt(height) * 0.65 + 'px)']
 	    }, {
 	        duration: 3500,
 	        fill: 'forwards'
-	    });
+	    }));
 	
 	    return new Promise(function (resolve) {
-	        setTimeout(function () {
-	            container.innerHTML = '';
-	            addFullSizeImage(8);
-	            imgElements[8].animate({
-	                transform: ['translate(' + width + ')', 'translate(0)', 'translate(' + width + ')']
-	            }, {
-	                duration: 2500,
-	                delay: 200,
-	                fill: 'forwards'
-	            });
+	        var timer = setTimeout(resolve, 3500);
+	        animation.timersTimeout.push(timer);
+	    });
+	}
 	
-	            addFullSizeImage(7);
-	            imgElements[7].animate({
-	                transform: ['translate(-' + parseInt(width) * 1.4 + 'px)', 'translate(0)']
-	            }, {
-	                duration: 1400,
-	                delay: 1200,
-	                fill: 'forwards'
-	            });
+	function episode4_2() {
+	    animation.func = 4;
+	    animation.anims = [];
+	    animation.timersInterval = [];
+	    animation.timersTimeout = [];
+	    container.innerHTML = '';
+	    return new Promise(function (resolve) {
+	        addFullSizeImage(8);
+	        animation.anims.push(imgElements[8].animate({
+	            transform: ['translate(' + width + ')', 'translate(0)', 'translate(' + width + ')']
+	        }, {
+	            duration: 2500,
+	            delay: 200,
+	            fill: 'forwards'
+	        }));
 	
-	            setTimeout(function () {
-	                container.innerHTML = '';
-	                resolve();
-	            }, 4000);
-	        }, 3500);
+	        addFullSizeImage(7);
+	        animation.anims.push(imgElements[7].animate({
+	            transform: ['translate(-' + parseInt(width) * 1.4 + 'px)', 'translate(0)']
+	        }, {
+	            duration: 1400,
+	            delay: 1200,
+	            fill: 'forwards'
+	        }));
+	
+	        var timer = setTimeout(resolve, 4000);
+	        animation.timersTimeout.push(timer);
 	    });
 	}
 	
 	function episode5() {
-	    container.style.background = 'url("./images/images(15).jpg") no-repeat 50% 50% /300%';
+	    animation.func = 7;
+	    animation.anims = [];
+	    animation.timersInterval = [];
+	    animation.timersTimeout = [];
+	    container.innerHTML = '';
+	    container.style.background = 'url("./images/images(15).jpg") no-repeat 50% 50% /320%';
 	    var counter = 15;
 	    var dur = 2500;
 	    var startX = void 0,
@@ -8456,115 +8627,153 @@
 	
 	            addImage(counter);
 	
-	            imgElements[counter].animate({
+	            animation.anims.push(imgElements[counter].animate({
 	                transform: ['translate(' + startX + 'px, ' + startY + 'px) rotate(' + startAngle + 'deg) scale(' + startScale + ')', 'scale(' + endScale + ') rotate(' + endAngle + 'deg) translate(' + endX + 'px, ' + endY + 'px)']
 	            }, {
 	                duration: dur,
 	                fill: 'forwards',
 	                easing: 'cubic-bezier(0.645, 0.045, 0.355, 1)'
-	            });
+	            }));
 	
 	            if (++counter > 18) {
 	                clearInterval(timer);
-	                setTimeout(function () {
-	                    var cloneImg18 = imgElements[18].cloneNode(true);
-	                    container.innerHTML = '';
-	                    addFullSizeImage(15);
-	                    addFullSizeImage(16);
-	                    addFullSizeImage(17);
-	                    container.appendChild(cloneImg18);
-	                    cloneImg18.animate({
-	                        transform: ['scale(1.8) translate(' + parseInt(width) / 10 + 'px, ' + parseInt(height) / 10 + 'px)', 'scale(1.5) translate(-' + parseInt(width) * 1.2 + 'px, 0)']
-	                    }, {
-	                        duration: 2500,
-	                        fill: 'forwards'
-	                    });
-	
-	                    resolve();
-	                }, 5800);
+	                var timer2 = setTimeout(resolve, 5800);
+	                animation.timersTimeout.push(timer2);
 	            }
 	        }, 1400);
+	        animation.timersInterval.push(timer);
+	    });
+	}
+	
+	function episode5_2() {
+	    animation.func = 8;
+	    animation.anims = [];
+	    animation.timersInterval = [];
+	    animation.timersTimeout = [];
+	    var cloneImg18 = imgElements[18].cloneNode(true);
+	    container.innerHTML = '';
+	    addFullSizeImage(15);
+	    addFullSizeImage(16);
+	    addFullSizeImage(17);
+	    container.appendChild(cloneImg18);
+	    animation.anims.push(cloneImg18.animate({
+	        transform: ['scale(1.8) translate(' + parseInt(width) / 10 + 'px, ' + parseInt(height) / 10 + 'px)', 'scale(1.5) translate(-' + parseInt(width) * 1.2 + 'px, 0)']
+	    }, {
+	        duration: 2500,
+	        fill: 'forwards'
+	    }));
+	    return new Promise(function (resolve) {
+	        var timer = setTimeout(resolve, 2500);
+	        animation.timersTimeout.push(timer);
 	    });
 	}
 	
 	function episode6() {
-	    var counter = 17;
+	    animation.func = 9;
+	    animation.anims = [];
+	    animation.timersInterval = [];
+	    animation.timersTimeout = [];
+	    container.innerHTML = '';
+	    var counter = 16;
+	    addFullSizeImage(15);
+	    addFullSizeImage(16);
+	    addFullSizeImage(17);
+	    animation.anims.push(imgElements[17].animate({
+	        transform: ['translate(0, 0)', 'translate(' + width + ') rotate(10deg)']
+	    }, {
+	        duration: 2000,
+	        fill: 'forwards'
+	    }));
 	
 	    return new Promise(function (resolve) {
-	
 	        var timer = setInterval(function () {
 	            offsetX = counter % 2 === 0 ? parseInt(width) * -1.2 : parseInt(width) * 1.2;
 	
-	            imgElements[counter].animate({
+	            animation.anims.push(imgElements[counter].animate({
 	                transform: ['translate(0, 0)', 'translate(' + offsetX + 'px) rotate(10deg)']
 	            }, {
 	                duration: 2000,
 	                fill: 'forwards'
-	            });
+	            }));
 	
 	            if (--counter < 15) {
 	                clearInterval(timer);
-	                setTimeout(function () {
+	                var timer2 = setTimeout(function () {
 	                    container.innerHTML = '';
-	                    container.animate({
-	                        transform: ['rotate(0)', 'rotate(8deg)']
+	                    animation.anims.push(container.animate({
+	                        transform: ['rotate(0)', 'rotate(8deg)', 'rotate(5deg)', 'rotate(0)']
 	                    }, {
-	                        duration: 2100
-	                    });
+	                        duration: 2500
+	                    }));
 	                }, 2200);
-	                setTimeout(resolve, 4300);
+	                animation.timersTimeout.push(timer2);
+	                var timer3 = setTimeout(resolve, 4400);
+	                animation.timersTimeout.push(timer3);
 	            }
 	        }, 2100);
+	        animation.timersInterval.push(timer);
 	    });
 	}
 	
 	function episode7() {
+	    animation.func = 10;
+	    animation.anims = [];
+	    animation.timersInterval = [];
+	    animation.timersTimeout = [];
 	    container.innerHTML = '';
 	    addFullSizeImage(19);
-	    imgElements[19].animate({
+	    animation.anims.push(imgElements[19].animate({
 	        transform: ['scale(0.8)', 'scale(1)'],
 	        filter: ['grayscale(0)', 'grayscale(0)', 'grayscale(100%)']
 	    }, {
 	        duration: 1800,
 	        fill: 'forwards'
-	    });
-	    setTimeout(function () {
+	    }));
+	    var timer1 = setTimeout(function () {
 	        addImage(20);
-	        imgElements[20].animate({
+	        animation.anims.push(imgElements[20].animate({
 	            transform: ['translate(0, -' + parseInt(height) * 0.6 + 'px) rotate(60deg)', 'translate(' + parseInt(width) * 0.2 + 'px, ' + parseInt(height) * 0.2 + 'px) rotate(10deg)'],
 	            filter: ['grayscale(0)', 'grayscale(0)', 'grayscale(100%)']
 	        }, {
 	            duration: 1800,
 	            fill: 'forwards'
-	        });
+	        }));
 	    }, 1600);
+	    animation.timersTimeout.push(timer1);
 	
-	    setTimeout(function () {
+	    var timer2 = setTimeout(function () {
 	        addImage(21);
-	        imgElements[21].animate({
+	        animation.anims.push(imgElements[21].animate({
 	            transform: ['translate(' + parseInt(width) * 0.6 + 'px, -' + parseInt(height) * 0.6 + 'px) rotate(-60deg)', 'translate(' + parseInt(width) * 0.25 + 'px, ' + parseInt(height) * 0.2 + 'px) rotate(-10deg)'],
 	            filter: ['grayscale(0)', 'grayscale(100%)']
 	        }, {
 	            duration: 1800,
 	            fill: 'forwards'
-	        });
+	        }));
 	    }, 3200);
+	    animation.timersTimeout.push(timer2);
 	
 	    return new Promise(function (resolve) {
-	        setTimeout(function () {
+	        var timer3 = setTimeout(function () {
 	            addImage(22);
-	            imgElements[22].animate({
+	            animation.anims.push(imgElements[22].animate({
 	                transform: ['translate(' + parseInt(width) * 0.6 + 'px, ' + parseInt(height) * 0.6 + 'px) rotate(60deg)', 'translate(' + parseInt(width) * 0.3 + 'px, ' + parseInt(height) * 0.2 + 'px) rotate(10deg) scale(1.2)', 'translate(' + parseInt(width) * 0.2 + 'px, ' + parseInt(height) * 0.2 + 'px) rotate(0deg) scale(1.7)']
 	            }, {
 	                duration: 4200,
 	                fill: 'forwards'
-	            });
-	            setTimeout(resolve, 4600);
+	            }));
+	            var timer4 = setTimeout(resolve, 4600);
+	            animation.timersTimeout.push(timer4);
 	        }, 5000);
+	        animation.timersTimeout.push(timer3);
 	    });
 	}
 	
 	function episode8() {
+	    animation.func = 11;
+	    animation.anims = [];
+	    animation.timersInterval = [];
+	    animation.timersTimeout = [];
 	    container.style.background = '';
 	    container.innerHTML = '';
 	    var counter = 23;
@@ -8572,12 +8781,12 @@
 	    var timer = setInterval(function () {
 	        addFullSizeImage(counter);
 	        var angleY = counter % 2 === 0 ? 1 : 4;
-	        imgElements[counter].animate({
+	        animation.anims.push(imgElements[counter].animate({
 	            transform: ['translate(0, ' + parseInt(width) / 2 + 'px) rotate3d(2, ' + angleY + ', 0, 90deg)', 'translate(0, 0) rotate3d(0, 0, 0, 0deg)']
 	        }, {
 	            duration: 1750,
 	            fill: 'forwards'
-	        });
+	        }));
 	
 	        if (++counter > 26) {
 	            clearInterval(timer);
@@ -8587,377 +8796,436 @@
 	            addFullSizeImage(25);
 	            addFullSizeImage(26);
 	
-	            for (var _i = 26; _i > 22; _i--) {
-	                var delay = 2200 + 1000 * (26 - _i);
-	                imgElements[_i].animate({
+	            for (var _i6 = 26; _i6 > 22; _i6--) {
+	                var delay = 2200 + 1000 * (26 - _i6);
+	                animation.anims.push(imgElements[_i6].animate({
 	                    transform: ['translate(0, 0)', 'translate(' + width + ', 0)']
 	                }, {
 	                    duration: 1000,
 	                    delay: delay,
 	                    fill: 'forwards'
-	                });
+	                }));
 	            }
 	        }
 	    }, 1800);
+	    animation.timersInterval.push(timer);
+	    return new Promise(function (resolve) {
+	        var timer2 = setTimeout(resolve, 13600);
+	        animation.timersTimeout.push(timer2);
+	    });
+	}
+	
+	function episode8_2() {
+	    animation.func = 12;
+	    animation.anims = [];
+	    animation.timersInterval = [];
+	    animation.timersTimeout = [];
+	    container.innerHTML = '';
+	    var coordX = void 0,
+	        coordY = void 0;
+	    for (var _i7 = 27; _i7 < 31; _i7++) {
+	        addFullSizeImage(_i7);
+	        coordX = _i7 % 2 === 0 ? parseInt(width) / 2 : parseInt(width) / -2;
+	        coordY = _i7 > 28 ? parseInt(height) / 2 : parseInt(height) / -2;
+	        animation.anims.push(imgElements[_i7].animate({
+	            transform: ['scaleX(0) translate(0, 0)', 'scale(0.5) translate(' + coordX + 'px, ' + coordY + 'px)', 'scale(0.5) translate(' + coordX + 'px, ' + coordY + 'px)', 'scale(0.5) translate(' + coordX + 'px, ' + coordY + 'px)', 'scaleX(0) translate(0, 0)']
+	        }, {
+	            duration: 7400,
+	            fill: 'forwards'
+	        }));
+	    }
 	
 	    return new Promise(function (resolve) {
-	        setTimeout(function () {
+	        var timer1 = setTimeout(function () {
 	            container.innerHTML = '';
-	            var coordX = void 0,
-	                coordY = void 0;
-	            for (var _i2 = 27; _i2 < 31; _i2++) {
-	                addFullSizeImage(_i2);
-	                coordX = _i2 % 2 === 0 ? parseInt(width) / 2 : parseInt(width) / -2;
-	                coordY = _i2 > 28 ? parseInt(height) / 2 : parseInt(height) / -2;
-	                imgElements[_i2].animate({
-	                    transform: ['scaleX(0) translate(0, 0)', 'scale(0.5) translate(' + coordX + 'px, ' + coordY + 'px)', 'scale(0.5) translate(' + coordX + 'px, ' + coordY + 'px)', 'scale(0.5) translate(' + coordX + 'px, ' + coordY + 'px)', 'scaleX(0) translate(0, 0)']
-	                }, {
-	                    duration: 7400,
-	                    fill: 'forwards'
-	                });
-	            }
-	
-	            setTimeout(function () {
-	                container.innerHTML = '';
-	                addFullSizeImage(31);
-	                setTimeout(resolve, 2800);
-	            }, 7400);
-	        }, 13600);
+	            addFullSizeImage(31);
+	            var timer2 = setTimeout(resolve, 2800);
+	            animation.timersTimeout.push(timer2);
+	        }, 7400);
+	        animation.timersTimeout.push(timer1);
 	    });
 	}
 	
 	function episode9() {
+	    animation.func = 13;
+	    animation.anims = [];
+	    animation.timersInterval = [];
+	    animation.timersTimeout = [];
 	    var counter = 32;
+	    container.innerHTML = '';
+	    addFullSizeImage(31);
 	
 	    return new Promise(function (resolve) {
 	        var timer = setInterval(function () {
 	            addFullSizeImage(counter);
-	            imgElements[counter].animate({
+	            animation.anims.push(imgElements[counter].animate({
 	                transform: ['translate(-' + width + ')', 'translate(0)']
 	            }, {
 	                duration: 1200,
 	                fill: 'forwards'
-	            });
+	            }));
 	
 	            if (++counter === 35) {
 	                clearInterval(timer);
-	                setTimeout(function () {
+	                var timer2 = setTimeout(function () {
 	                    addFullSizeImage(35);
-	                    imgElements[35].animate({
+	                    animation.anims.push(imgElements[35].animate({
 	                        transform: ['scale(0.25)', 'scale(1)']
 	                    }, {
 	                        duration: 1800,
 	                        fill: 'forwards'
-	                    });
-	                    setTimeout(resolve, 3300);
+	                    }));
+	                    var timer3 = setTimeout(resolve, 3300);
+	                    animation.timersTimeout.push(timer3);
 	                }, 1500);
+	                animation.timersTimeout.push(timer2);
 	            }
 	        }, 1300);
+	        animation.timersInterval.push(timer);
 	    });
 	}
 	
 	function episode10() {
+	    animation.func = 14;
+	    animation.anims = [];
+	    animation.timersInterval = [];
+	    animation.timersTimeout = [];
 	    container.innerHTML = '';
 	
 	    addFullSizeImage(36);
-	    imgElements[36].animate({
+	    animation.anims.push(imgElements[36].animate({
 	        transform: ['scale(2.5)', 'scale(1)', 'scale(1)', 'rotate(7)', 'translate(' + width + ')']
 	    }, {
 	        duration: 7200,
 	        fill: 'forwards'
-	    });
+	    }));
 	
-	    setTimeout(function () {
+	    var timer1 = setTimeout(function () {
 	        addFullSizeImage(37);
-	        imgElements[37].animate({
+	        animation.anims.push(imgElements[37].animate({
 	            transform: ['translate(-' + parseInt(width) * 2 + 'px) rotate(60deg)', 'translate(-' + width + ') rotate(30deg)', 'translate(0) rotate(6deg)', 'translate(0) rotate(0deg)', 'translate(' + parseInt(width) * 1.3 + 'px) rotate(-10deg)']
 	        }, {
 	            duration: 8200,
 	            fill: 'forwards'
-	        });
+	        }));
 	    }, 4000);
+	    animation.timersTimeout.push(timer1);
 	
-	    setTimeout(function () {
+	    var timer2 = setTimeout(function () {
 	        addFullSizeImage(38);
-	        imgElements[38].animate({
+	        animation.anims.push(imgElements[38].animate({
 	            transform: ['translate(' + parseInt(width) * 2 + 'px) rotate(-60deg)', 'translate(' + width + ') rotate(-30deg)', 'translate(0) rotate(-6deg)', 'translate(0) rotate(0deg)', 'translate(-' + parseInt(width) * 1.3 + 'px) rotate(10deg)']
 	        }, {
 	            duration: 8200,
 	            fill: 'forwards'
-	        });
+	        }));
 	    }, 6500);
+	    animation.timersTimeout.push(timer2);
 	
-	    setTimeout(function () {
+	    var timer3 = setTimeout(function () {
 	        addFullSizeImage(39);
-	        imgElements[39].animate({
+	        animation.anims.push(imgElements[39].animate({
 	            transform: ['scale(0.3)', 'translate(0) rotate(4deg) scale(0.8)', 'translate(0) rotate(0deg) scale(1)', 'translate(' + parseInt(width) * 1.3 + 'px) rotate(-10deg)']
 	        }, {
 	            duration: 8200,
 	            fill: 'forwards'
-	        });
+	        }));
 	    }, 10200);
+	    animation.timersTimeout.push(timer3);
 	
-	    setTimeout(function () {
+	    var timer4 = setTimeout(function () {
 	        container.style.background = 'url("./images/images(40).jpg") no-repeat 50% 50% /100%';
 	    }, 15500);
+	    animation.timersTimeout.push(timer4);
 	
 	    return new Promise(function (resolve) {
-	        setTimeout(function () {
+	        var timer5 = setTimeout(function () {
 	            addFullSizeImage(40);
 	            imgElements[40].querySelector('img').style.border = 'none';
-	            imgElements[40].animate({
+	            animation.anims.push(imgElements[40].animate({
 	                transform: ['scale(1)', 'scale(3)']
 	            }, {
 	                duration: 5500,
 	                fill: 'forwards'
-	            });
-	            setTimeout(resolve, 7200);
+	            }));
+	            var timer6 = setTimeout(resolve, 7200);
+	            animation.timersTimeout.push(timer6);
 	        }, 18000);
+	        animation.timersTimeout.push(timer5);
 	    });
 	}
 	
 	function episode11() {
+	    animation.func = 15;
+	    animation.anims = [];
+	    animation.timersInterval = [];
+	    animation.timersTimeout = [];
+	    container.innerHTML = '';
 	    container.style.background = '';
 	    container.innerHTML = '';
 	    addFullSizeImage(47);
 	    addFullSizeImage(46);
-	    imgElements[46].animate({
+	    animation.anims.push(imgElements[46].animate({
 	        transform: ['translate(0, 0)', 'translate(-' + parseInt(width) * 0.4 + 'px)', 'translate(-' + parseInt(width) * 0.4 + 'px)', 'translate(-' + parseInt(width) * 0.4 + 'px, -' + parseInt(height) / 2 + 'px)'],
 	        filter: ['grayscale(0)', 'grayscale(50%)', 'grayscale(50%)', 'grayscale(100%)'],
 	        opacity: [1, 1, 1, 1, 1, 0]
 	    }, {
 	        duration: 5000,
 	        fill: 'forwards'
-	    });
+	    }));
 	
-	    imgElements[47].animate({
+	    animation.anims.push(imgElements[47].animate({
 	        transform: ['translate(' + parseInt(width) + 'px)', 'translate(' + parseInt(width) * 0.6 + 'px)', 'translate(' + parseInt(width) * 0.6 + 'px)', 'translate(' + parseInt(width) * 0.6 + 'px, ' + parseInt(height) / 3 + 'px)'],
 	        filter: ['grayscale(0)', 'grayscale(50%)', 'grayscale(50%)', 'grayscale(100%)'],
 	        opacity: [1, 1, 1, 0]
 	    }, {
 	        duration: 6800,
 	        fill: 'forwards'
-	    });
+	    }));
 	
-	    setTimeout(function () {
+	    var timer1 = setTimeout(function () {
 	        addFullSizeImage(52);
-	        imgElements[52].animate({
+	        animation.anims.push(imgElements[52].animate({
 	            transform: ['translate(' + parseInt(width) * 0.6 + 'px, ' + parseInt(height) / 3 + 'px)', 'translate(' + parseInt(width) * 0.6 + 'px, ' + parseInt(height) * 0.4 + 'px)'],
 	            filter: ['grayscale(0)', 'grayscale(20%)', 'grayscale(50%)', 'grayscale(80%)'],
 	            opacity: [0, 1]
 	        }, {
 	            duration: 3000,
 	            fill: 'forwards'
-	        });
+	        }));
 	    }, 6200);
+	    animation.timersTimeout.push(timer1);
 	
-	    setTimeout(function () {
+	    var timer2 = setTimeout(function () {
 	        addFullSizeImage(48);
-	        imgElements[48].animate({
+	        animation.anims.push(imgElements[48].animate({
 	            transform: ['scale(0.6) translate(-' + parseInt(width) / 3 + 'px, ' + parseInt(height) + 'px)', 'scale(0.6) translate(-' + parseInt(width) / 3 + 'px, ' + parseInt(height) / 2 + 'px)', 'scale(0.6) translate(-' + parseInt(width) / 3 + 'px, ' + parseInt(height) / 2 + 'px)'],
 	            filter: ['grayscale(0)', 'grayscale(0)', 'grayscale(50%)', 'grayscale(100%)'],
 	            opacity: [1, 1, 1, 0]
 	        }, {
 	            duration: 5500,
 	            fill: 'forwards'
-	        });
+	        }));
 	
 	        addFullSizeImage(50);
-	        imgElements[50].animate({
+	        animation.anims.push(imgElements[50].animate({
 	            transform: ['translate(-' + parseInt(width) * 0.4 + 'px, -' + parseInt(height) / 2 + 'px)', 'translate(-' + parseInt(width) * 0.4 + 'px, -' + parseInt(height) / 2 + 'px)', 'translate(-' + parseInt(width) * 0.4 + 'px, -' + parseInt(height) / 2 + 'px)', 'translate(-' + parseInt(width) * 0.4 + 'px, 0)'],
 	            filter: ['grayscale(0)', 'grayscale(0)', 'grayscale(50%)', 'grayscale(90%)'],
 	            opacity: [0, 0.6, 1]
 	        }, {
 	            duration: 8000,
 	            fill: 'forwards'
-	        });
-	        setTimeout(function () {
+	        }));
+	        var timer3 = setTimeout(function () {
 	            addFullSizeImage(51);
-	            imgElements[51].animate({
+	            animation.anims.push(imgElements[51].animate({
 	                transform: ['scale(0.6) translate(-' + parseInt(width) / 3 + 'px, ' + parseInt(height) / 2 + 'px)', 'scale(0.6) translate(-' + parseInt(width) / 3 + 'px, ' + parseInt(height) / 2 + 'px)'],
 	                filter: ['grayscale(0)', 'grayscale(0)', 'grayscale(50%)', 'grayscale(80%)'],
 	                opacity: [0, 1, 0.8, 0]
 	            }, {
 	                duration: 3000,
 	                fill: 'forwards'
-	            });
+	            }));
 	        }, 4000);
+	        animation.timersTimeout.push(timer3);
 	    }, 3500);
+	    animation.timersTimeout.push(timer2);
 	
-	    setTimeout(function () {
+	    var timer4 = setTimeout(function () {
 	        addFullSizeImage(49);
-	        imgElements[49].animate({
+	        animation.anims.push(imgElements[49].animate({
 	            transform: ['scale(0.4) translate(' + parseInt(width) * 0.75 + 'px, -' + parseInt(height) * 1.2 + 'px)', 'scale(0.4) translate(' + parseInt(width) * 0.75 + 'px, -' + parseInt(height) * 0.75 + 'px)'],
 	            filter: ['grayscale(0)', 'grayscale(0)', 'grayscale(0)', 'grayscale(100%)'],
 	            opacity: [1, 1, 1, 0]
 	        }, {
 	            duration: 4500,
 	            fill: 'forwards'
-	        });
-	        setTimeout(function () {
+	        }));
+	        var timer5 = setTimeout(function () {
 	            addFullSizeImage(54);
-	            imgElements[54].animate({
+	            animation.anims.push(imgElements[54].animate({
 	                transform: ['scale(0.4) translate(' + parseInt(width) * 0.75 + 'px, -' + parseInt(height) * 0.75 + 'px)', 'scale(0.4) translate(' + parseInt(width) * 0.75 + 'px, -' + parseInt(height) * 0.75 + 'px)'],
 	                filter: ['grayscale(0)', 'grayscale(0)', 'grayscale(0)', 'grayscale(80%)'],
 	                opacity: [0, 1]
 	            }, {
 	                duration: 2500,
 	                fill: 'forwards'
-	            });
+	            }));
 	        }, 3800);
+	        animation.timersTimeout.push(timer5);
 	    }, 4000);
+	    animation.timersTimeout.push(timer4);
 	
 	    return new Promise(function (resolve) {
-	        setTimeout(function () {
+	        var timer6 = setTimeout(function () {
 	            addFullSizeImage(53);
-	            imgElements[53].animate({
+	            animation.anims.push(imgElements[53].animate({
 	                transform: ['translate(-' + parseInt(width) * 0.4 + 'px)', 'translate(-' + parseInt(width) * 0.4 + 'px)', 'translate(0)'],
 	                filter: ['grayscale(0)', 'grayscale(0)', 'grayscale(30%)', 'grayscale(70%)']
 	            }, {
 	                duration: 3200,
 	                fill: 'forwards'
-	            });
-	            setTimeout(function () {
-	                container.innerHTML = '';
-	                resolve();
-	            }, 6500);
+	            }));
+	            var timer7 = setTimeout(resolve, 6500);
+	            animation.timersTimeout.push(timer7);
 	        }, 13000);
+	        animation.timersTimeout.push(timer6);
 	    });
 	}
 	
 	function episode12() {
+	    animation.func = 16;
+	    animation.anims = [];
+	    animation.timersInterval = [];
+	    animation.timersTimeout = [];
+	    container.innerHTML = '';
 	    addFullSizeImage(55);
-	    imgElements[55].animate({
+	    animation.anims.push(imgElements[55].animate({
 	        transform: ['translate(' + parseInt(width) * 0.75 + 'px, -' + parseInt(height) * 0.25 + 'px) scale(0.2)', 'translate(-' + parseInt(width) * 0.25 + 'px, 0) scale(0.6)']
 	    }, {
 	        duration: 1500,
 	        fill: 'forwards'
-	    });
+	    }));
 	
-	    setTimeout(function () {
+	    var timer1 = setTimeout(function () {
 	        addFullSizeImage(56);
-	        imgElements[56].animate({
+	        animation.anims.push(imgElements[56].animate({
 	            transform: ['translate(' + parseInt(width) * 0.9 + 'px, -' + parseInt(height) * 0.25 + 'px) scale(0.2)', 'translate(' + parseInt(width) * 0.25 + 'px, 0) scale(0.6)']
 	        }, {
 	            duration: 1500,
 	            fill: 'forwards'
-	        });
+	        }));
 	    }, 1600);
+	    animation.timersTimeout.push(timer1);
 	
 	    return new Promise(function (resolve) {
-	        setTimeout(function () {
+	        var timer2 = setTimeout(function () {
 	            addFullSizeImage(57);
-	            imgElements[57].animate({
+	            animation.anims.push(imgElements[57].animate({
 	                transform: ['scale(2.5)', 'scale(0.65)'],
 	                opacity: [0, 1]
 	            }, {
 	                duration: 1000,
 	                fill: 'forwards'
-	            });
-	            setTimeout(function () {
-	                container.innerHTML = '';
-	                resolve();
-	            }, 3000);
+	            }));
+	            var timer3 = setTimeout(resolve, 3000);
+	            animation.timersTimeout.push(timer3);
 	        }, 4800);
+	        animation.timersTimeout.push(timer2);
 	    });
 	}
 	
 	function episode13() {
+	    animation.func = 17;
+	    animation.anims = [];
+	    animation.timersInterval = [];
+	    animation.timersTimeout = [];
+	    container.innerHTML = '';
 	    addFullSizeImage(58);
 	    imgElements[58].querySelector('img').style.border = 'none';
-	    imgElements[58].animate({
+	    animation.anims.push(imgElements[58].animate({
 	        transform: ['translate(-' + parseInt(width) * 0.2 + 'px, 0) scale(0.6) rotate(-3deg)', 'translate(-' + parseInt(width) * 0.2 + 'px, -' + parseInt(height) * 0.15 + 'px) scale(0.6) rotate(-7deg)', 'translate(-' + parseInt(width) * 0.2 + 'px, -' + parseInt(height) * 0.15 + 'px) scale(0.6) rotate(0deg)', 'translate(-' + parseInt(width) * 0.2 + 'px, -' + parseInt(height) * 0.15 + 'px) scale(0.6) rotate(-3deg)', 'translate(-' + parseInt(width) * 0.2 + 'px, -' + parseInt(height) * 0.15 + 'px) scale(0.6) rotate(7deg)'],
 	        opacity: [0, 1, 1, 1, 1]
 	    }, {
 	        duration: 8000,
 	        fill: 'forwards'
-	    });
+	    }));
 	
 	    addFullSizeImage(59);
 	    imgElements[59].querySelector('img').style.border = 'none';
-	    imgElements[59].animate({
+	    animation.anims.push(imgElements[59].animate({
 	        transform: ['translate(' + parseInt(width) * 0.2 + 'px, 0) scale(0.6) rotate(-3deg)', 'translate(' + parseInt(width) * 0.2 + 'px, 0) scale(0.6) rotate(8deg)', 'translate(' + parseInt(width) * 0.21 + 'px, 0) scale(0.6) rotate(-3deg)', 'translate(' + parseInt(width) * 0.21 + 'px, 0) scale(0.6) rotate(-7deg)', 'translate(' + parseInt(width) * 0.2 + 'px, 0) scale(0.6) rotate(3deg)'],
 	        opacity: [0, 1, 1, 1, 1]
 	    }, {
 	        duration: 8000,
 	        fill: 'forwards'
-	    });
+	    }));
 	
 	    addFullSizeImage(60);
 	    imgElements[60].querySelector('img').style.border = 'none';
-	    imgElements[60].animate({
+	    animation.anims.push(imgElements[60].animate({
 	        transform: ['translate(0, 0) scale(2)', 'translate(0, 0) scale(2)', 'translate(-' + parseInt(width) * 0.2 + 'px, ' + parseInt(height) * 0.2 + 'px) scale(0.6)', 'translate(-' + parseInt(width) * 0.18 + 'px, ' + parseInt(height) * 0.18 + 'px) scale(0.6) rotate(-5deg)', 'translate(-' + parseInt(width) * 0.18 + 'px, ' + parseInt(height) * 0.18 + 'px) scale(0.6) rotate(5deg)', 'translate(0, 0) scale(1)']
 	    }, {
 	        duration: 9000,
 	        fill: 'forwards'
-	    });
+	    }));
 	
 	    return new Promise(function (resolve) {
-	        setTimeout(function () {
-	            container.innerHTML = '';
-	            resolve();
-	        }, 12000);
+	        var timer = setTimeout(resolve, 12000);
+	        animation.timersTimeout.push(timer);
 	    });
 	}
 	
 	function episode14() {
+	    animation.func = 18;
+	    animation.anims = [];
+	    animation.timersInterval = [];
+	    animation.timersTimeout = [];
+	    container.innerHTML = '';
 	    addFullSizeImage(61);
 	    addFullSizeImage(58);
 	    addFullSizeImage(60);
 	    imgElements[61].querySelector('img').style.border = 'none';
 	
-	    imgElements[60].animate({
+	    animation.anims.push(imgElements[60].animate({
 	        transform: ['scale(1)', 'scale(3)'],
 	        opacity: [1, 0]
 	    }, {
 	        duration: 1600,
 	        fill: 'forwards'
-	    });
+	    }));
 	
-	    imgElements[58].animate({
+	    animation.anims.push(imgElements[58].animate({
 	        transform: ['translate(-' + parseInt(width) * 0.2 + 'px, -' + parseInt(height) * 0.15 + 'px) scale(0.6) rotate(7deg)', 'scale(1)', 'scale(3)'],
 	        opacity: [1, 0.8, 0]
 	    }, {
 	        duration: 3000,
 	        delay: 1200,
 	        fill: 'forwards'
-	    });
+	    }));
 	
-	    imgElements[61].animate({
+	    animation.anims.push(imgElements[61].animate({
 	        transform: ['translate(0, 0) scale(1.4)', 'translate(0, 0) scale(1.4)', 'translate(0, 0) scale(1.4)', 'translate(0, 0) scale(1.4)', 'translate(' + parseInt(width) * 0.3 + 'px, 0) scale(1)']
 	    }, {
 	        duration: 4300,
 	        delay: 3200,
 	        fill: 'forwards'
-	    });
+	    }));
 	
-	    setTimeout(function () {
+	    var timer1 = setTimeout(function () {
 	        addFullSizeImage(62);
 	        imgElements[62].querySelector('img').style.border = 'none';
-	        imgElements[62].animate({
+	        animation.anims.push(imgElements[62].animate({
 	            transform: ['translate(-' + parseInt(width) * 1.2 + 'px, 0)', 'translate(-' + parseInt(width) * 0.48 + 'px, 0)']
 	        }, {
 	            duration: 1500,
 	            fill: 'forwards'
-	        });
+	        }));
 	    }, 6100);
+	    animation.timersTimeout.push(timer1);
 	
 	    return new Promise(function (resolve) {
-	        setTimeout(function () {
+	        var timer2 = setTimeout(function () {
 	            addFullSizeImage(63);
 	            imgElements[63].querySelector('img').style.border = 'none';
-	            imgElements[63].animate({
+	            animation.anims.push(imgElements[63].animate({
 	                transform: ['translate(0, -' + parseInt(height) * 1.2 + 'px) scale(1.2)', 'translate(0, 0) scale(1.3)']
 	            }, {
 	                duration: 1800,
 	                fill: 'forwards'
-	            });
-	            setTimeout(resolve, 3200);
+	            }));
+	            var timer3 = setTimeout(resolve, 3200);
+	            animation.timersTimeout.push(timer3);
 	        }, 10000);
+	        animation.timersTimeout.push(timer2);
 	    });
 	}
 	
 	function episode15() {
+	    animation.func = 19;
+	    animation.anims = [];
+	    animation.timersInterval = [];
+	    animation.timersTimeout = [];
 	    container.innerHTML = '';
 	    var element64 = document.createElement('div');
 	    var element65 = document.createElement('div');
@@ -8978,43 +9246,46 @@
 	    element66.style.background = 'url("./images/images(66).jpg") no-repeat 50% 50% /120%';
 	    container.appendChild(element66);
 	
-	    var animation = element64.animate({
+	    animation.anims.push(element64.animate({
 	        transform: ['translate(' + parseInt(width) * 0.6 + 'px, 0)', 'translate(-' + parseInt(width) / 100 + 'px, 0)']
 	    }, {
 	        duration: 1800,
 	        fill: 'forwards'
-	    });
+	    }));
 	
-	    element65.animate({
+	    animation.anims.push(element65.animate({
 	        transform: ['translate(' + parseInt(width) * 0.6 + 'px, -' + parseInt(height) * 2 + 'px)', 'translate(' + parseInt(width) * 0.6 + 'px, -' + parseInt(height) * 1.2 + 'px)']
 	    }, {
 	        duration: 1800,
 	        fill: 'forwards'
-	    });
+	    }));
 	
-	    element66.animate({
+	    animation.anims.push(element66.animate({
 	        transform: ['translate(' + parseInt(width) * 0.6 + 'px, -' + parseInt(height) * 0.5 + 'px)', 'translate(' + parseInt(width) * 0.6 + 'px, -' + parseInt(height) * 1.8 + 'px)']
 	    }, {
 	        duration: 1800,
 	        fill: 'forwards'
-	    });
+	    }));
 	
-	    for (var _i3 = 1; _i3 < 6; _i3++) {
-	        setTimeout(function () {
+	    var timer = void 0;
+	    for (var _i8 = 1; _i8 < 6; _i8++) {
+	        timer = setTimeout(function () {
 	            document.querySelector('#player').volume -= 0.2;
-	        }, 1000 * _i3);
+	        }, 1000 * _i8);
+	        animation.timersTimeout.push(timer);
 	    }
 	
-	    setTimeout(function () {
+	    var timer2 = setTimeout(function () {
 	        document.querySelector('#player').pause();
-	        container.animate({
+	        animation.anims.push(container.animate({
 	            opacity: [1, 0]
 	        }, {
 	            duration: 2000,
 	            fill: 'forwards'
-	        });
+	        }));
 	        window.removeEventListener('resize', resizeWindow);
 	    }, 5000);
+	    animation.timersTimeout.push(timer2);
 	}
 
 /***/ }
