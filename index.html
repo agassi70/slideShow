@@ -7,30 +7,47 @@
     body {
       margin: 0;
       padding: 0;
-      background-color: #07091e;
+      background-color: #030107;
+      width: 100%;
     }
 
     #container {
       position: relative;
       overflow: hidden;
-      background-color: #07091e;
+      background-color: #030107;
+      margin: 0 auto;
     }
 
     #remote {
-      width: 5%;
-      height: 98%;
-      background-color: rgba(199,255,217,0.81);
+      background-color: black;
+      margin: 0 auto;
+    }
+
+    progress {
+      width: 100%;
+      height: 2px;
+      margin-top: 0;
+      margin-bottom: 7px;
+      background-color: red;
+    }
+
+    progress::-webkit-progress-value {
+      background-color: red;
+    }
+
+    progress::-moz-progress-bar {
+      background-color: red;
+    }
+
+    .buttons {
       display: flex;
-      flex-direction: column;
       justify-content: space-around;
       align-items: center;
     }
 
     .anim-cont {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100%;
+      width: 100%;
+      background-color: #030107;
     }
 
     .wrapper {
@@ -40,11 +57,12 @@
     .btn {
       width: 30px;
       height: 30px;
-      border-radius: 15px;
       border: none;
+      border-radius: 50%;
+      background-color: black;
     }
 
-    .play {
+    .start {
       background: url("./assets/play.png") 50% 50% /100% no-repeat;
     }
 
@@ -54,11 +72,11 @@
 
     .fullsize {
       background: url("./assets/fullsize.png") 50% 50% /95% no-repeat;
-      border-radius: 5px;
+      border-radius: 2px;
     }
 
     .no-translate {
-      background: url("./assets/no-translate-detected.jpg") 50% 50% /100% no-repeat;
+      background: url("./assets/no-translate.png") 50% 50% /100% no-repeat;
     }
 
     .translate {
@@ -82,21 +100,23 @@
   <script src="assets/web-animations.min.js"></script>
 </head>
 <body>
-  <audio id="player">
-    <source src="assets/Abschnittsmusik.ogg" type="audio/ogg">
-    <source src="assets/Abschnittsmusik.MP3" type="audio/mpeg">
-  </audio>
-  <div class="anim-cont">
-    <div id="container"></div>
-    <div id="remote">
+<audio id="player">
+  <source src="assets/Abschnittsmusik.ogg" type="audio/ogg">
+  <source src="assets/Abschnittsmusik.MP3" type="audio/mpeg">
+</audio>
+<div class="anim-cont">
+  <div id="container"></div>
+  <div id="remote">
+    <progress id="prog" max="930"></progress>
+    <div class="buttons">
       <button class="btn play"></button>
-      <button class="btn pause"></button>
-      <button class="btn forward"></button>
       <button class="btn backward"></button>
+      <button class="btn forward"></button>
       <button class="btn fullsize"></button>
       <button class="btn volume"></button>
     </div>
   </div>
-  <script language="JavaScript" src="polyfillResult.js"></script>
+</div>
+<script language="JavaScript" src="polyfillResult.js"></script>
 </body>
 </html>
