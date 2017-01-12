@@ -8229,6 +8229,7 @@
 	        player.play();
 	        btnPlay.classList.remove('start');
 	        btnPlay.classList.add('pause');
+	        progress.setAttribute('value', episodes[animation.func] * 5);
 	        startProgressBar();
 	        var _promise = functions[animation.func]();
 	
@@ -8269,6 +8270,14 @@
 	    if (currentFunc === functions.length - 1) {
 	        return;
 	    }
+	
+	    if (!isPlay) {
+	        isPlay = true;
+	        btnPlay.classList.remove('start');
+	        btnPlay.classList.add('pause');
+	        player.play();
+	        startProgressBar();
+	    }
 	    //    setTime(episodes[currentFunc + 1]);
 	    animation.anims.forEach(function (animation) {
 	        return animation.finish();
@@ -8295,6 +8304,14 @@
 	    isBreake = true;
 	    if (currentFunc === 0) {
 	        return;
+	    }
+	
+	    if (!isPlay) {
+	        isPlay = true;
+	        btnPlay.classList.remove('start');
+	        btnPlay.classList.add('pause');
+	        player.play();
+	        startProgressBar();
 	    }
 	    // setTime(episodes[currentFunc - 1]);
 	    animation.anims.forEach(function (animation) {
@@ -8665,7 +8682,7 @@
 	    container.appendChild(cloneCont);
 	    cloneCont.style.position = 'absolute';
 	    cloneCont.style.background = 'url("./images/images(15).jpg") no-repeat 50% 50% /320%';
-	    cloneCont.style.filter = 'brightness(50%)';
+	    cloneCont.style.filter = 'brightness(30%)';
 	    var counter = 15;
 	    var dur = void 0;
 	    var startX = void 0,
@@ -8758,7 +8775,7 @@
 	    container.appendChild(cloneCont);
 	    cloneCont.style.position = 'absolute';
 	    cloneCont.style.background = 'url("./images/images(15).jpg") no-repeat 50% 50% /320%';
-	    cloneCont.style.filter = 'brightness(50%)';
+	    cloneCont.style.filter = 'brightness(30%)';
 	    addFullSizeImage(15);
 	    addFullSizeImage(16);
 	    addFullSizeImage(17);
@@ -8785,7 +8802,7 @@
 	    container.appendChild(cloneCont);
 	    cloneCont.style.position = 'absolute';
 	    cloneCont.style.background = 'url("./images/images(15).jpg") no-repeat 50% 50% /320%';
-	    cloneCont.style.filter = 'brightness(50%)';
+	    cloneCont.style.filter = 'brightness(30%)';
 	    var counter = 16;
 	    addFullSizeImage(15);
 	    addFullSizeImage(16);
@@ -8929,7 +8946,7 @@
 	    }, 1800);
 	    animation.timersInterval.push(timer);
 	    return new Promise(function (resolve) {
-	        var timer2 = setTimeout(resolve, 13600);
+	        var timer2 = setTimeout(resolve, 11800);
 	        animation.timersTimeout.push(timer2);
 	    });
 	}
@@ -9083,22 +9100,14 @@
 	    animation.timersInterval = [];
 	    animation.timersTimeout = [];
 	    container.innerHTML = '';
-	    addFullSizeImage(47);
+	
 	    addFullSizeImage(46);
 	    animation.anims.push(imgElements[46].animate({
 	        transform: ['translate(0, 0)', 'translate(0, 0)', 'translate(-' + parseInt(width) * 0.4 + 'px)', 'translate(-' + parseInt(width) * 0.4 + 'px)', 'translate(-' + parseInt(width) * 0.4 + 'px, -' + parseInt(height) / 2 + 'px)'],
-	        filter: ['grayscale(0)', 'grayscale(10%)', 'grayscale(50%)', 'grayscale(90%)'],
-	        opacity: [1, 1, 1, 1, 1, 1, 0]
+	        filter: ['grayscale(0)', 'grayscale(10%)', 'grayscale(50%)', 'grayscale(50%)', 'grayscale(90%)'],
+	        opacity: [1, 1, 1, 1, 1, 1, 1, 0.5, 0]
 	    }, {
-	        duration: 5500,
-	        fill: 'forwards'
-	    }));
-	
-	    animation.anims.push(imgElements[47].animate({
-	        transform: ['translate(' + parseInt(width) * 1.1 + 'px)', 'translate(' + parseInt(width) * 0.6 + 'px)', 'translate(' + parseInt(width) * 0.6 + 'px)', 'translate(' + parseInt(width) * 0.6 + 'px, ' + parseInt(height) / 3 + 'px)'],
-	        filter: ['grayscale(0)', 'grayscale(20%)', 'grayscale(50%)', 'grayscale(80%)']
-	    }, {
-	        duration: 7000,
+	        duration: 4800,
 	        fill: 'forwards'
 	    }));
 	
@@ -9107,78 +9116,110 @@
 	        animation.anims.push(imgElements[52].animate({
 	            transform: ['translate(' + parseInt(width) * 0.6 + 'px, ' + parseInt(height) * 0.4 + 'px)', 'translate(' + parseInt(width) * 0.6 + 'px, ' + parseInt(height) * 0.4 + 'px)'],
 	            filter: ['grayscale(0)', 'grayscale(20%)', 'grayscale(50%)', 'grayscale(80%)'],
-	            opacity: [0, 1]
+	            opacity: [0.7, 1]
 	        }, {
-	            duration: 3000,
+	            duration: 2500,
 	            fill: 'forwards'
 	        }));
-	    }, 8500);
+	    }, 7500);
 	    animation.timersTimeout.push(timer1);
 	
 	    var timer2 = setTimeout(function () {
 	        addFullSizeImage(48);
 	        animation.anims.push(imgElements[48].animate({
-	            transform: ['scale(0.6) translate(-' + parseInt(width) / 3 + 'px, ' + parseInt(height) / 2 + 'px)', 'scale(0.6) translate(-' + parseInt(width) / 3 + 'px, ' + parseInt(height) / 2 + 'px)'],
-	            filter: ['grayscale(0)', 'grayscale(0)', 'grayscale(50%)', 'grayscale(100%)'],
+	            transform: ['scale(0.6) translate(-' + parseInt(width) / 3 + 'px, ' + parseInt(height) + 'px)', 'scale(0.6) translate(-' + parseInt(width) / 3 + 'px, ' + parseInt(height) / 2 + 'px)', 'scale(0.6) translate(-' + parseInt(width) / 3 + 'px, ' + parseInt(height) / 2 + 'px)', 'scale(0.6) translate(-' + parseInt(width) / 3 + 'px, ' + parseInt(height) / 2 + 'px)'],
+	            filter: ['grayscale(0)', 'grayscale(0)', 'grayscale(50%)', 'grayscale(80%)'],
 	            opacity: [0, 1, 1, 1, 0]
 	        }, {
-	            duration: 3000,
+	            duration: 4000,
 	            fill: 'forwards'
 	        }));
-	    }, 4500);
+	    }, 3300);
 	
 	    var timer3 = setTimeout(function () {
 	        addFullSizeImage(50);
 	        animation.anims.push(imgElements[50].animate({
-	            transform: ['translate(-' + parseInt(width) * 0.4 + 'px, -' + parseInt(height) * 0.5 + 'px)', 'translate(-' + parseInt(width) * 0.4 + 'px, -' + parseInt(height) * 0.5 + 'px)'],
+	            transform: ['translate(-' + parseInt(width) * 0.4 + 'px, -' + parseInt(height) * 0.5 + 'px)', 'translate(-' + parseInt(width) * 0.4 + 'px, -' + parseInt(height) * 0.5 + 'px)', 'translate(-' + parseInt(width) * 0.4 + 'px, -' + parseInt(height) * 0.5 + 'px)', 'translate(-' + parseInt(width) * 0.4 + 'px, -' + parseInt(height) * 0.5 + 'px)', 'translate(-' + parseInt(width) * 0.4 + 'px, -' + parseInt(height) * 0.5 + 'px)', 'translate(-' + parseInt(width) * 0.4 + 'px, 0)'],
 	            filter: ['grayscale(0)', 'grayscale(0)', 'grayscale(20%)', 'grayscale(80%)'],
-	            opacity: [0, 0.5, 1, 1]
+	            opacity: [0.7, 1, 1]
 	        }, {
-	            duration: 3500,
+	            duration: 5200,
 	            fill: 'forwards'
 	        }));
-	    }, 5000);
+	    }, 4700);
 	
 	    var timer4 = setTimeout(function () {
-	        addFullSizeImage(51);
-	        animation.anims.push(imgElements[51].animate({
-	            transform: ['scale(0.6) translate(-' + parseInt(width) / 3 + 'px, ' + parseInt(height) / 2 + 'px)', 'scale(0.6) translate(-' + parseInt(width) / 3 + 'px, ' + parseInt(height) / 2 + 'px)'],
+	        var elem51 = document.createElement('div');
+	        elem51.style.width = width;
+	        elem51.style.height = height;
+	        elem51.style.background = 'url("./images/images(51).jpg") no-repeat 50% 50% /110%';
+	        elem51.style.position = 'absolute';
+	        container.appendChild(elem51);
+	        animation.anims.push(elem51.animate({
+	            transform: ['scale(0.6) translate(-' + parseInt(width) / 3 + 'px, ' + parseInt(height) / 2 + 'px)', 'scale(0.6) translate(-' + parseInt(width) / 3 + 'px, ' + parseInt(height) / 2 + 'px)', 'scale(0.6) translate(-' + parseInt(width) / 3 + 'px, ' + parseInt(height) / 2 + 'px)', 'scale(0.6) translate(-' + parseInt(width) / 3 + 'px, ' + parseInt(height) / 2 + 'px)', 'scale(0.6) translate(-' + parseInt(width) / 3 + 'px, ' + parseInt(height) * 1.4 + 'px)'],
 	            filter: ['grayscale(0)', 'grayscale(0)', 'grayscale(20%)', 'grayscale(80%)'],
-	            opacity: [0, 1, 1]
+	            opacity: [0.5, 1, 1]
 	        }, {
-	            duration: 2500,
+	            duration: 4000,
 	            fill: 'forwards'
 	        }));
-	    }, 6700);
+	    }, 6200);
 	    animation.timersTimeout.push(timer2);
 	    animation.timersTimeout.push(timer3);
 	    animation.timersTimeout.push(timer4);
 	
 	    var timer5 = setTimeout(function () {
-	        addFullSizeImage(49);
-	        animation.anims.push(imgElements[49].animate({
+	        var elem49 = document.createElement('div');
+	        elem49.style.width = width;
+	        elem49.style.height = height;
+	        elem49.style.background = 'url("./images/images(49).jpg") no-repeat 50% 50% /120%';
+	        elem49.style.position = 'absolute';
+	        container.appendChild(elem49);
+	        animation.anims.push(elem49.animate({
 	            transform: ['scale(0.4) translate(' + parseInt(width) * 0.75 + 'px, -' + parseInt(height) * 0.75 + 'px)', 'scale(0.4) translate(' + parseInt(width) * 0.75 + 'px, -' + parseInt(height) * 0.75 + 'px)'],
 	            filter: ['grayscale(0)', 'grayscale(15%)', 'grayscale(80%)', 'grayscale(80%)'],
 	            opacity: [0, 1, 1, 1, 0.5, 0]
 	        }, {
-	            duration: 4200,
+	            duration: 4400,
 	            fill: 'forwards'
 	        }));
-	    }, 6000);
+	    }, 5600);
 	    animation.timersTimeout.push(timer5);
 	
 	    var timer6 = setTimeout(function () {
-	        addFullSizeImage(54);
-	        animation.anims.push(imgElements[54].animate({
+	        var elem54 = document.createElement('div');
+	        elem54.style.width = width;
+	        elem54.style.height = height;
+	        elem54.style.background = 'url("./images/images(54).jpg") no-repeat 50% 50% /120%';
+	        elem54.style.position = 'absolute';
+	        container.appendChild(elem54);
+	        animation.anims.push(elem54.animate({
 	            transform: ['scale(0.4) translate(' + parseInt(width) * 0.75 + 'px, -' + parseInt(height) * 0.75 + 'px)', 'scale(0.4) translate(' + parseInt(width) * 0.75 + 'px, -' + parseInt(height) * 0.75 + 'px)'],
 	            filter: ['grayscale(0)', 'grayscale(0)', 'grayscale(0)', 'grayscale(80%)'],
-	            opacity: [0, 1]
+	            opacity: [0.3, 1]
 	        }, {
-	            duration: 2500,
+	            duration: 2400,
 	            fill: 'forwards'
 	        }));
-	    }, 8500);
+	    }, 8200);
 	    animation.timersTimeout.push(timer6);
+	
+	    var timer47 = setTimeout(function () {
+	        var elem47 = document.createElement('div');
+	        elem47.style.width = width;
+	        elem47.style.height = height;
+	        elem47.style.background = 'url("./images/images(47).jpg") no-repeat 50% 50% /120%';
+	        elem47.style.position = 'absolute';
+	        container.appendChild(elem47);
+	        animation.anims.push(elem47.animate({
+	            transform: ['translate(' + parseInt(width) * 1.1 + 'px)', 'translate(' + parseInt(width) * 0.8 + 'px)', 'translate(' + parseInt(width) * 0.6 + 'px)', 'translate(' + parseInt(width) * 0.6 + 'px)', 'translate(' + parseInt(width) * 0.6 + 'px)', 'translate(' + parseInt(width) * 0.6 + 'px)', 'translate(' + parseInt(width) * 0.6 + 'px, ' + parseInt(height) / 3 + 'px)'],
+	            filter: ['grayscale(0)', 'grayscale(0)', 'grayscale(20%)', 'grayscale(50%)', 'grayscale(80%)']
+	        }, {
+	            duration: 5000,
+	            fill: 'forwards'
+	        }));
+	    }, 600);
+	    animation.timersTimeout.push(timer47);
 	
 	    return new Promise(function (resolve) {
 	        var timer8 = setTimeout(function () {
