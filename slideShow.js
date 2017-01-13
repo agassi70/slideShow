@@ -43,7 +43,7 @@ for (let i = 1; i < 145; i++) {
 
 const imgElements = createImgElements();
 
-window.addEventListener('resize', resizeWindow);
+body.addEventListener('resize', resizeWindow);
 
 
 btnPlay.addEventListener('click', () => {
@@ -152,15 +152,30 @@ document.querySelector('.btn.backward').addEventListener('click', () => {
     }
 });
 
-player.play();
-startProgressBar();
-player.volume = 1;
-btnVolume.classList.add('no-translate');
-btnPlay.classList.add('pause');
+startGame();
 
-let promise = functions[0]();
-for (let i = 1; i < 20; i++) {
-    promise = promise.then(functions[i], err => console.log(err));
+function startGame() {
+    animation.func = 0;
+    if (animation.anims) {
+        animation.anims.forEach(animation => animation.finish());
+    }
+    if (animation.timersInterval) {
+        animation.timersInterval.forEach(timer => clearInterval(timer));
+    }
+    if (animation.timersTimeout) {
+        animation.timersTimeout.forEach(timer => clearTimeout(timer));
+    }
+    player.play();
+    progress.setAttribute("value", 0);
+    startProgressBar();
+    player.volume = 1;
+    btnVolume.classList.add('no-translate');
+    btnPlay.classList.add('pause');
+
+    let promise = functions[0]();
+    for (let i = 1; i < 20; i++) {
+        promise = promise.then(functions[i], err => console.log(err));
+    }
 }
 
 function startProgressBar() {
@@ -1209,14 +1224,16 @@ function episode13() {
     animation.timersTimeout = [];
     container.innerHTML = '';
     addFullSizeImage(58);
+    addFullSizeImage(59);
+    addFullSizeImage(60);
     imgElements[58].querySelector('img').style.border = 'none';
     animation.anims.push(imgElements[58].animate({
         transform: [
             `translate(-${parseInt(width) * 0.2}px, 0) scale(0.6) rotate(-3deg)`,
             `translate(-${parseInt(width) * 0.2}px, -${parseInt(height) * 0.15}px) scale(0.6) rotate(-7deg)`,
-            `translate(-${parseInt(width) * 0.2}px, -${parseInt(height) * 0.15}px) scale(0.6) rotate(0deg)`,
             `translate(-${parseInt(width) * 0.2}px, -${parseInt(height) * 0.15}px) scale(0.6) rotate(-3deg)`,
-            `translate(-${parseInt(width) * 0.2}px, -${parseInt(height) * 0.15}px) scale(0.6) rotate(7deg)`,
+            `translate(-${parseInt(width) * 0.2}px, -${parseInt(height) * 0.15}px) scale(0.6) rotate(0deg)`,
+            `translate(-${parseInt(width) * 0.2}px, -${parseInt(height) * 0.15}px) scale(0.6) rotate(-2deg)`,
         ],
         opacity: [0, 1, 1, 1, 1]
     }, {
@@ -1224,15 +1241,14 @@ function episode13() {
         fill: 'forwards'
     }));
 
-    addFullSizeImage(59);
     imgElements[59].querySelector('img').style.border = 'none';
     animation.anims.push(imgElements[59].animate({
         transform: [
-            `translate(${parseInt(width) * 0.2}px, 0) scale(0.6) rotate(-3deg)`,
-            `translate(${parseInt(width) * 0.2}px, 0) scale(0.6) rotate(8deg)`,
-            `translate(${parseInt(width) * 0.21}px, 0) scale(0.6) rotate(-3deg)`,
-            `translate(${parseInt(width) * 0.21}px, 0) scale(0.6) rotate(-7deg)`,
-            `translate(${parseInt(width) * 0.2}px, 0) scale(0.6) rotate(3deg)`,
+            `translate(${parseInt(width) * 0.25}px, 0) scale(0.6) rotate(8deg)`,
+            `translate(${parseInt(width) * 0.25}px, 0) scale(0.6) rotate(6deg)`,
+            `translate(${parseInt(width) * 0.23}px, 0) scale(0.6) rotate(0deg)`,
+            `translate(${parseInt(width) * 0.22}px, 3px) scale(0.6) rotate(-1deg)`,
+            `translate(${parseInt(width) * 0.22}px, 8px) scale(0.6) rotate(-3deg)`,
         ],
         opacity: [0, 1, 1, 1, 1]
     }, {
@@ -1240,15 +1256,14 @@ function episode13() {
         fill: 'forwards'
     }));
 
-    addFullSizeImage(60);
     imgElements[60].querySelector('img').style.border = 'none';
     animation.anims.push(imgElements[60].animate({
         transform: [
             `translate(0, 0) scale(2)`,
             `translate(0, 0) scale(2)`,
             `translate(-${parseInt(width) * 0.2}px, ${parseInt(height) * 0.2}px) scale(0.6)`,
-            `translate(-${parseInt(width) * 0.18}px, ${parseInt(height) * 0.18}px) scale(0.6) rotate(-5deg)`,
             `translate(-${parseInt(width) * 0.18}px, ${parseInt(height) * 0.18}px) scale(0.6) rotate(5deg)`,
+            `translate(-${parseInt(width) * 0.18}px, ${parseInt(height) * 0.18}px) scale(0.6) rotate(-1deg)`,
             `translate(0, 0) scale(1)`,
         ],
     }, {
@@ -1418,14 +1433,18 @@ function episode15() {
     }
 
     const timer2 = setTimeout(() => {
-        document.querySelector('#player').pause();
+        player.pause();
         animation.anims.push(container.animate({
             opacity: [1, 0]
         }, {
-            duration: 2000,
+            duration: 1500,
             fill: 'forwards'
         }));
-        window.removeEventListener('resize', resizeWindow);
+        const timer3 = setTimeout(() => {
+            player.load();
+            location.reload();
+        }, 2000);
+        animation.timersTimeout.push(timer3);
     }, 5000);
     animation.timersTimeout.push(timer2);
 }

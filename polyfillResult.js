@@ -8207,7 +8207,7 @@
 	
 	var imgElements = createImgElements();
 	
-	window.addEventListener('resize', resizeWindow);
+	body.addEventListener('resize', resizeWindow);
 	
 	btnPlay.addEventListener('click', function () {
 	    isPlay = !isPlay;
@@ -8231,10 +8231,10 @@
 	        btnPlay.classList.add('pause');
 	        progress.setAttribute('value', episodes[animation.func] * 5);
 	        startProgressBar();
-	        var _promise = functions[animation.func]();
+	        var promise = functions[animation.func]();
 	
 	        for (var _i = animation.func + 1; _i < 20; _i++) {
-	            _promise = _promise.then(functions[_i]);
+	            promise = promise.then(functions[_i]);
 	        }
 	    }
 	});
@@ -8333,17 +8333,38 @@
 	    }
 	});
 	
-	player.play();
-	startProgressBar();
-	player.volume = 1;
-	btnVolume.classList.add('no-translate');
-	btnPlay.classList.add('pause');
+	startGame();
 	
-	var promise = functions[0]();
-	for (var _i2 = 1; _i2 < 20; _i2++) {
-	    promise = promise.then(functions[_i2], function (err) {
-	        return console.log(err);
-	    });
+	function startGame() {
+	    animation.func = 0;
+	    if (animation.anims) {
+	        animation.anims.forEach(function (animation) {
+	            return animation.finish();
+	        });
+	    }
+	    if (animation.timersInterval) {
+	        animation.timersInterval.forEach(function (timer) {
+	            return clearInterval(timer);
+	        });
+	    }
+	    if (animation.timersTimeout) {
+	        animation.timersTimeout.forEach(function (timer) {
+	            return clearTimeout(timer);
+	        });
+	    }
+	    player.play();
+	    progress.setAttribute("value", 0);
+	    startProgressBar();
+	    player.volume = 1;
+	    btnVolume.classList.add('no-translate');
+	    btnPlay.classList.add('pause');
+	
+	    var promise = functions[0]();
+	    for (var _i2 = 1; _i2 < 20; _i2++) {
+	        promise = promise.then(functions[_i2], function (err) {
+	            return console.log(err);
+	        });
+	    }
 	}
 	
 	function startProgressBar() {
@@ -9288,29 +9309,29 @@
 	    animation.timersTimeout = [];
 	    container.innerHTML = '';
 	    addFullSizeImage(58);
+	    addFullSizeImage(59);
+	    addFullSizeImage(60);
 	    imgElements[58].querySelector('img').style.border = 'none';
 	    animation.anims.push(imgElements[58].animate({
-	        transform: ['translate(-' + parseInt(width) * 0.2 + 'px, 0) scale(0.6) rotate(-3deg)', 'translate(-' + parseInt(width) * 0.2 + 'px, -' + parseInt(height) * 0.15 + 'px) scale(0.6) rotate(-7deg)', 'translate(-' + parseInt(width) * 0.2 + 'px, -' + parseInt(height) * 0.15 + 'px) scale(0.6) rotate(0deg)', 'translate(-' + parseInt(width) * 0.2 + 'px, -' + parseInt(height) * 0.15 + 'px) scale(0.6) rotate(-3deg)', 'translate(-' + parseInt(width) * 0.2 + 'px, -' + parseInt(height) * 0.15 + 'px) scale(0.6) rotate(7deg)'],
+	        transform: ['translate(-' + parseInt(width) * 0.2 + 'px, 0) scale(0.6) rotate(-3deg)', 'translate(-' + parseInt(width) * 0.2 + 'px, -' + parseInt(height) * 0.15 + 'px) scale(0.6) rotate(-7deg)', 'translate(-' + parseInt(width) * 0.2 + 'px, -' + parseInt(height) * 0.15 + 'px) scale(0.6) rotate(-3deg)', 'translate(-' + parseInt(width) * 0.2 + 'px, -' + parseInt(height) * 0.15 + 'px) scale(0.6) rotate(0deg)', 'translate(-' + parseInt(width) * 0.2 + 'px, -' + parseInt(height) * 0.15 + 'px) scale(0.6) rotate(-2deg)'],
 	        opacity: [0, 1, 1, 1, 1]
 	    }, {
 	        duration: 8000,
 	        fill: 'forwards'
 	    }));
 	
-	    addFullSizeImage(59);
 	    imgElements[59].querySelector('img').style.border = 'none';
 	    animation.anims.push(imgElements[59].animate({
-	        transform: ['translate(' + parseInt(width) * 0.2 + 'px, 0) scale(0.6) rotate(-3deg)', 'translate(' + parseInt(width) * 0.2 + 'px, 0) scale(0.6) rotate(8deg)', 'translate(' + parseInt(width) * 0.21 + 'px, 0) scale(0.6) rotate(-3deg)', 'translate(' + parseInt(width) * 0.21 + 'px, 0) scale(0.6) rotate(-7deg)', 'translate(' + parseInt(width) * 0.2 + 'px, 0) scale(0.6) rotate(3deg)'],
+	        transform: ['translate(' + parseInt(width) * 0.25 + 'px, 0) scale(0.6) rotate(8deg)', 'translate(' + parseInt(width) * 0.25 + 'px, 0) scale(0.6) rotate(6deg)', 'translate(' + parseInt(width) * 0.23 + 'px, 0) scale(0.6) rotate(0deg)', 'translate(' + parseInt(width) * 0.22 + 'px, 3px) scale(0.6) rotate(-1deg)', 'translate(' + parseInt(width) * 0.22 + 'px, 8px) scale(0.6) rotate(-3deg)'],
 	        opacity: [0, 1, 1, 1, 1]
 	    }, {
 	        duration: 8000,
 	        fill: 'forwards'
 	    }));
 	
-	    addFullSizeImage(60);
 	    imgElements[60].querySelector('img').style.border = 'none';
 	    animation.anims.push(imgElements[60].animate({
-	        transform: ['translate(0, 0) scale(2)', 'translate(0, 0) scale(2)', 'translate(-' + parseInt(width) * 0.2 + 'px, ' + parseInt(height) * 0.2 + 'px) scale(0.6)', 'translate(-' + parseInt(width) * 0.18 + 'px, ' + parseInt(height) * 0.18 + 'px) scale(0.6) rotate(-5deg)', 'translate(-' + parseInt(width) * 0.18 + 'px, ' + parseInt(height) * 0.18 + 'px) scale(0.6) rotate(5deg)', 'translate(0, 0) scale(1)']
+	        transform: ['translate(0, 0) scale(2)', 'translate(0, 0) scale(2)', 'translate(-' + parseInt(width) * 0.2 + 'px, ' + parseInt(height) * 0.2 + 'px) scale(0.6)', 'translate(-' + parseInt(width) * 0.18 + 'px, ' + parseInt(height) * 0.18 + 'px) scale(0.6) rotate(5deg)', 'translate(-' + parseInt(width) * 0.18 + 'px, ' + parseInt(height) * 0.18 + 'px) scale(0.6) rotate(-1deg)', 'translate(0, 0) scale(1)']
 	    }, {
 	        duration: 9000,
 	        fill: 'forwards'
@@ -9452,14 +9473,18 @@
 	    }
 	
 	    var timer2 = setTimeout(function () {
-	        document.querySelector('#player').pause();
+	        player.pause();
 	        animation.anims.push(container.animate({
 	            opacity: [1, 0]
 	        }, {
-	            duration: 2000,
+	            duration: 1500,
 	            fill: 'forwards'
 	        }));
-	        window.removeEventListener('resize', resizeWindow);
+	        var timer3 = setTimeout(function () {
+	            player.load();
+	            location.reload();
+	        }, 2000);
+	        animation.timersTimeout.push(timer3);
 	    }, 5000);
 	    animation.timersTimeout.push(timer2);
 	}
