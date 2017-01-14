@@ -18,8 +18,6 @@ const btnPlay = document.querySelector('.btn.play');
 const btnVolume = document.querySelector('.btn.volume');
 const player = document.querySelector('#player');
 
-//const player = new Audio('assets/Abschnittsmusik.ogg');
-
 let bodyWidth;
 let bodyHeight;
 let height;
@@ -44,7 +42,6 @@ for (let i = 1; i < 145; i++) {
 const imgElements = createImgElements();
 
 body.addEventListener('resize', resizeWindow);
-
 
 btnPlay.addEventListener('click', () => {
     isPlay = !isPlay;
@@ -1209,7 +1206,7 @@ function episode12() {
             }, {
                 duration: 1000,
                 fill: 'forwards'
-            }));
+            }));``
             const timer3 = setTimeout(resolve, 3000);
             animation.timersTimeout.push(timer3);
         }, 4800);
@@ -1223,57 +1220,77 @@ function episode13() {
     animation.timersInterval = [];
     animation.timersTimeout = [];
     container.innerHTML = '';
+
+    const elem56 = document.createElement('div');
+    elem56.style.width = width;
+    elem56.style.height = height;
+    elem56.style.background = `url("./images/images(56).jpg") no-repeat 50% 50% /430%`;
+    elem56.style.filter = 'brightness(50%)';
+    elem56.style.position = 'absolute';
+    container.appendChild(elem56);
+
     addFullSizeImage(58);
-    addFullSizeImage(59);
-    addFullSizeImage(60);
+
+    const timer2 = setTimeout(() => {
+        addFullSizeImage(59);
+        imgElements[59].querySelector('img').style.border = 'none';
+        animation.anims.push(imgElements[59].animate({
+            transform: [
+                `translate(${parseInt(width) * 0.21}px, ${parseInt(height) * 0.12}px) scale(0.6) rotate(14deg)`,
+                `translate(${parseInt(width) * 0.17}px, ${parseInt(height) * 0.12}px) scale(0.6) rotate(-8deg)`,
+                `translate(${parseInt(width) * 0.13}px, ${parseInt(height) * 0.12}px) scale(0.6) rotate(-4deg)`,
+                `translate(${parseInt(width) * 0.13}px, ${parseInt(height) * 0.12}px) scale(0.6) rotate(-2deg)`,
+            ],
+            opacity: [0, 1, 1, 1, 1]
+        }, {
+            duration: 7800,
+            fill: 'forwards'
+        }));
+    }, 80);
+
+    const timer1 = setTimeout(() => {
+        const elem60 = document.createElement('div');
+        elem60.style.width = width;
+        elem60.style.height = height;
+        elem60.style.background = `url("./images/images(60).jpg") no-repeat 50% 50% /100%`;
+        elem60.style.position = 'absolute';
+        container.appendChild(elem60);
+        animation.anims.push(elem60.animate({
+            transform: [
+                `translate(0, 0) scale(2)`,
+                `translate(0, 0) scale(2)`,
+                `translate(-${parseInt(width) * 0.18}px, ${parseInt(height) * 0.18}px) scale(0.6) rotate(5deg)`,
+                `translate(-${parseInt(width) * 0.18}px, ${parseInt(height) * 0.18}px) scale(0.6) rotate(1deg)`,
+                `translate(-${parseInt(width) * 0.18}px, ${parseInt(height) * 0.18}px) scale(0.6) rotate(-2deg)`,
+                `translate(0, 0) scale(1)`,
+            ],
+        }, {
+            duration: 9400,
+            fill: 'forwards'
+        }));
+    }, 120);
+
+    animation.timersTimeout.push(timer1);
+    animation.timersTimeout.push(timer2);
+
     imgElements[58].querySelector('img').style.border = 'none';
     animation.anims.push(imgElements[58].animate({
         transform: [
-            `translate(-${parseInt(width) * 0.2}px, 0) scale(0.6) rotate(-3deg)`,
-            `translate(-${parseInt(width) * 0.2}px, -${parseInt(height) * 0.15}px) scale(0.6) rotate(-7deg)`,
-            `translate(-${parseInt(width) * 0.2}px, -${parseInt(height) * 0.15}px) scale(0.6) rotate(-3deg)`,
-            `translate(-${parseInt(width) * 0.2}px, -${parseInt(height) * 0.15}px) scale(0.6) rotate(0deg)`,
-            `translate(-${parseInt(width) * 0.2}px, -${parseInt(height) * 0.15}px) scale(0.6) rotate(-2deg)`,
+            `translate(-${parseInt(width) * 0.15}px, 0) scale(0.6) rotate(-3deg)`,
+            `translate(-${parseInt(width) * 0.15}px, -${parseInt(height) * 0.18}px) scale(0.6) rotate(-7deg)`,
+            `translate(-${parseInt(width) * 0.15}px, -${parseInt(height) * 0.18}px) scale(0.6) rotate(-3deg)`,
+            `translate(-${parseInt(width) * 0.15}px, -${parseInt(height) * 0.18}px) scale(0.6) rotate(0deg)`,
+            `translate(-${parseInt(width) * 0.15}px, -${parseInt(height) * 0.18}px) scale(0.6) rotate(-2deg)`,
         ],
-        opacity: [0, 1, 1, 1, 1]
+        opacity: [0, 0, 1, 1, 1]
     }, {
         duration: 8000,
-        fill: 'forwards'
-    }));
-
-    imgElements[59].querySelector('img').style.border = 'none';
-    animation.anims.push(imgElements[59].animate({
-        transform: [
-            `translate(${parseInt(width) * 0.25}px, 0) scale(0.6) rotate(8deg)`,
-            `translate(${parseInt(width) * 0.25}px, 0) scale(0.6) rotate(6deg)`,
-            `translate(${parseInt(width) * 0.23}px, 0) scale(0.6) rotate(0deg)`,
-            `translate(${parseInt(width) * 0.22}px, 3px) scale(0.6) rotate(-1deg)`,
-            `translate(${parseInt(width) * 0.22}px, 8px) scale(0.6) rotate(-3deg)`,
-        ],
-        opacity: [0, 1, 1, 1, 1]
-    }, {
-        duration: 8000,
-        fill: 'forwards'
-    }));
-
-    imgElements[60].querySelector('img').style.border = 'none';
-    animation.anims.push(imgElements[60].animate({
-        transform: [
-            `translate(0, 0) scale(2)`,
-            `translate(0, 0) scale(2)`,
-            `translate(-${parseInt(width) * 0.2}px, ${parseInt(height) * 0.2}px) scale(0.6)`,
-            `translate(-${parseInt(width) * 0.18}px, ${parseInt(height) * 0.18}px) scale(0.6) rotate(5deg)`,
-            `translate(-${parseInt(width) * 0.18}px, ${parseInt(height) * 0.18}px) scale(0.6) rotate(-1deg)`,
-            `translate(0, 0) scale(1)`,
-        ],
-    }, {
-        duration: 9000,
         fill: 'forwards'
     }));
 
     return new Promise(resolve => {
-        const timer = setTimeout(resolve, 12000);
-        animation.timersTimeout.push(timer);
+        const timer3 = setTimeout(resolve, 12000);
+        animation.timersTimeout.push(timer3);
     });
 }
 
