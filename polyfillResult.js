@@ -8205,7 +8205,7 @@
 	
 	var imgElements = createImgElements();
 	
-	body.addEventListener('resize', resizeWindow);
+	window.addEventListener('resize', resizeWindow);
 	
 	btnPlay.addEventListener('click', function () {
 	    isPlay = !isPlay;
@@ -9316,18 +9316,26 @@
 	    container.appendChild(elem56);
 	
 	    addFullSizeImage(58);
+	    imgElements[58].querySelector('img').style.border = 'none';
+	    animation.anims.push(imgElements[58].animate({
+	        transform: ['translate(-' + parseInt(width) * 0.15 + 'px, -' + parseInt(height) * 0.185 + 'px) scale(0.6) rotate(-18deg)', 'translate(-' + parseInt(width) * 0.15 + 'px, -' + parseInt(height) * 0.185 + 'px) scale(0.6) rotate(-13deg)', 'translate(-' + parseInt(width) * 0.15 + 'px, -' + parseInt(height) * 0.185 + 'px) scale(0.6) rotate(-8deg)', 'translate(-' + parseInt(width) * 0.15 + 'px, -' + parseInt(height) * 0.185 + 'px) scale(0.6) rotate(-4deg)', 'translate(-' + parseInt(width) * 0.15 + 'px, -' + parseInt(height) * 0.185 + 'px) scale(0.6) rotate(-1deg)', 'translate(-' + parseInt(width) * 0.15 + 'px, -' + parseInt(height) * 0.185 + 'px) scale(0.6) rotate(-5deg)'],
+	        opacity: [0, 1, 1, 1]
+	    }, {
+	        duration: 8100,
+	        fill: 'forwards'
+	    }));
 	
 	    var timer2 = setTimeout(function () {
 	        addFullSizeImage(59);
 	        imgElements[59].querySelector('img').style.border = 'none';
 	        animation.anims.push(imgElements[59].animate({
-	            transform: ['translate(' + parseInt(width) * 0.21 + 'px, ' + parseInt(height) * 0.12 + 'px) scale(0.6) rotate(14deg)', 'translate(' + parseInt(width) * 0.17 + 'px, ' + parseInt(height) * 0.12 + 'px) scale(0.6) rotate(-8deg)', 'translate(' + parseInt(width) * 0.13 + 'px, ' + parseInt(height) * 0.12 + 'px) scale(0.6) rotate(-4deg)', 'translate(' + parseInt(width) * 0.13 + 'px, ' + parseInt(height) * 0.12 + 'px) scale(0.6) rotate(-2deg)'],
+	            transform: ['translate(' + parseInt(width) * 0.21 + 'px, ' + parseInt(height) * 0.12 + 'px) scale(0.6) rotate(17deg)', 'translate(' + parseInt(width) * 0.2 + 'px, ' + parseInt(height) * 0.12 + 'px) scale(0.6) rotate(15deg)', 'translate(' + parseInt(width) * 0.19 + 'px, ' + parseInt(height) * 0.12 + 'px) scale(0.6) rotate(0deg)', 'translate(' + parseInt(width) * 0.18 + 'px, ' + parseInt(height) * 0.1 + 'px) scale(0.6) rotate(-10deg)', 'translate(' + parseInt(width) * 0.17 + 'px, ' + parseInt(height) * 0.1 + 'px) scale(0.6) rotate(-5deg)', 'translate(' + parseInt(width) * 0.16 + 'px, ' + parseInt(height) * 0.1 + 'px) scale(0.6) rotate(0deg)'],
 	            opacity: [0, 1, 1, 1, 1]
 	        }, {
-	            duration: 7800,
+	            duration: 8100,
 	            fill: 'forwards'
 	        }));
-	    }, 80);
+	    }, 50);
 	
 	    var timer1 = setTimeout(function () {
 	        var elem60 = document.createElement('div');
@@ -9337,27 +9345,18 @@
 	        elem60.style.position = 'absolute';
 	        container.appendChild(elem60);
 	        animation.anims.push(elem60.animate({
-	            transform: ['translate(0, 0) scale(2)', 'translate(0, 0) scale(2)', 'translate(-' + parseInt(width) * 0.18 + 'px, ' + parseInt(height) * 0.18 + 'px) scale(0.6) rotate(5deg)', 'translate(-' + parseInt(width) * 0.18 + 'px, ' + parseInt(height) * 0.18 + 'px) scale(0.6) rotate(1deg)', 'translate(-' + parseInt(width) * 0.18 + 'px, ' + parseInt(height) * 0.18 + 'px) scale(0.6) rotate(-2deg)', 'translate(0, 0) scale(1)']
+	            transform: ['translate(0, 0) scale(2)', 'translate(0, 0) scale(2)', 'translate(0, 0) scale(1.2)', 'translate(-' + parseInt(width) * 0.18 + 'px, ' + parseInt(height) * 0.18 + 'px) scale(0.6) rotate(0deg)', 'translate(-' + parseInt(width) * 0.18 + 'px, ' + parseInt(height) * 0.18 + 'px) scale(0.6) rotate(4deg)', 'translate(-' + parseInt(width) * 0.18 + 'px, ' + parseInt(height) * 0.18 + 'px) scale(0.6) rotate(10deg)', 'translate(-' + parseInt(width) * 0.175 + 'px, ' + parseInt(height) * 0.18 + 'px) scale(0.6) rotate(5deg)', 'translate(-' + parseInt(width) * 0.17 + 'px, ' + parseInt(height) * 0.18 + 'px) scale(0.6) rotate(1deg)', 'translate(-' + parseInt(width) * 0.168 + 'px, ' + parseInt(height) * 0.18 + 'px) scale(0.6) rotate(-1deg)', 'translate(-' + parseInt(width) * 0.164 + 'px, ' + parseInt(height) * 0.18 + 'px) scale(0.6) rotate(-4deg)', 'translate(0, 0) scale(1)']
 	        }, {
-	            duration: 9400,
+	            duration: 9200,
 	            fill: 'forwards'
 	        }));
-	    }, 120);
+	    }, 75);
 	
 	    animation.timersTimeout.push(timer1);
 	    animation.timersTimeout.push(timer2);
 	
-	    imgElements[58].querySelector('img').style.border = 'none';
-	    animation.anims.push(imgElements[58].animate({
-	        transform: ['translate(-' + parseInt(width) * 0.15 + 'px, 0) scale(0.6) rotate(-3deg)', 'translate(-' + parseInt(width) * 0.15 + 'px, -' + parseInt(height) * 0.18 + 'px) scale(0.6) rotate(-7deg)', 'translate(-' + parseInt(width) * 0.15 + 'px, -' + parseInt(height) * 0.18 + 'px) scale(0.6) rotate(-3deg)', 'translate(-' + parseInt(width) * 0.15 + 'px, -' + parseInt(height) * 0.18 + 'px) scale(0.6) rotate(0deg)', 'translate(-' + parseInt(width) * 0.15 + 'px, -' + parseInt(height) * 0.18 + 'px) scale(0.6) rotate(-2deg)'],
-	        opacity: [0, 0, 1, 1, 1]
-	    }, {
-	        duration: 8000,
-	        fill: 'forwards'
-	    }));
-	
 	    return new Promise(function (resolve) {
-	        var timer3 = setTimeout(resolve, 12000);
+	        var timer3 = setTimeout(resolve, 11700);
 	        animation.timersTimeout.push(timer3);
 	    });
 	}
@@ -9367,57 +9366,70 @@
 	    animation.anims = [];
 	    animation.timersInterval = [];
 	    animation.timersTimeout = [];
+	    var elem60 = document.createElement('div');
+	    elem60.style.width = width;
+	    elem60.style.height = height;
+	    elem60.style.background = 'url("./images/images(60).jpg") no-repeat 50% 50% /100%';
+	    elem60.style.position = 'absolute';
 	    container.innerHTML = '';
-	    addFullSizeImage(61);
 	    addFullSizeImage(58);
 	    addFullSizeImage(59);
-	    addFullSizeImage(60);
-	    imgElements[61].querySelector('img').style.border = 'none';
+	    container.appendChild(elem60);
 	
-	    animation.anims.push(imgElements[60].animate({
+	    animation.anims.push(elem60.animate({
 	        transform: ['scale(1)', 'scale(3)'],
-	        opacity: [1, 0.8, 0]
+	        opacity: [1, 1, 1, 0.5, 0]
 	    }, {
 	        duration: 1300,
+	        delay: 700,
+	        fill: 'forwards'
+	    }));
+	    imgElements[59].querySelector('img').style.border = 'none';
+	    imgElements[58].querySelector('img').style.border = 'none';
+	    animation.anims.push(imgElements[58].animate({
+	        transform: ['translate(-' + parseInt(width) * 0.18 + 'px, -' + parseInt(height) * 0.15 + 'px) scale(0.6) rotate(-10deg)', 'translate(-' + parseInt(width) * 0.18 + 'px, -' + parseInt(height) * 0.15 + 'px) scale(0.6) rotate(-10deg)', 'translate(-' + parseInt(width) * 0.18 + 'px, -' + parseInt(height) * 0.15 + 'px) scale(0.6) rotate(7deg)', 'translate(0, 0) scale(1) rotate(0)', 'translate(0, 0) scale(1) rotate(0)', 'translate(0, 0) scale(1) rotate(0)', 'scale(2.8)'],
+	        opacity: [0, 1, 1]
+	    }, {
+	        duration: 6200,
+	        delay: 1300,
 	        fill: 'forwards'
 	    }));
 	
 	    animation.anims.push(imgElements[59].animate({
-	        transform: ['scale(1)', 'scale(3)'],
-	        opacity: [1, 0.75, 0]
+	        transform: ['translate(' + parseInt(width) * 0.22 + 'px, 0) scale(0.6) rotate(10deg)', 'translate(' + parseInt(width) * 0.22 + 'px, 0) scale(0.6) rotate(10deg)', 'translate(' + parseInt(width) * 0.22 + 'px, 0) scale(0.6) rotate(10deg)', 'translate(0, 0) scale(1) rotate(0deg)', 'translate(0, 0) scale(1) rotate(0deg)', 'translate(0, 0) scale(2.8) rotate(0deg)'],
+	        opacity: [0, 1, 0]
 	    }, {
-	        duration: 1300,
-	        delay: 1300,
+	        duration: 3400,
+	        delay: 500,
 	        fill: 'forwards'
 	    }));
 	
-	    animation.anims.push(imgElements[58].animate({
-	        transform: ['translate(-' + parseInt(width) * 0.2 + 'px, -' + parseInt(height) * 0.15 + 'px) scale(0.6) rotate(7deg)', 'scale(1)', 'scale(3)'],
-	        opacity: [0, 0.2, 1, 0.8, 0]
-	    }, {
-	        duration: 4200,
-	        delay: 1300,
-	        fill: 'forwards'
-	    }));
-	
-	    animation.anims.push(imgElements[61].animate({
-	        transform: ['translate(0, 0) scale(1.4)', 'translate(0, 0) scale(1.4)', 'translate(0, 0) scale(1.4)', 'translate(0, 0) scale(1.4)', 'translate(' + parseInt(width) * 0.3 + 'px, 0) scale(1)']
-	    }, {
-	        duration: 4000,
-	        delay: 4500,
-	        fill: 'forwards'
-	    }));
+	    var timer10 = setTimeout(function () {
+	        addFullSizeImage(61);
+	        imgElements[61].querySelector('img').style.border = 'none';
+	        animation.anims.push(imgElements[61].animate({
+	            transform: ['translate(0, 0) scale(1.3)', 'translate(0, 0) scale(1.3)', 'translate(0, 0) scale(1.3)', 'translate(0, 0) scale(1.3)', 'translate(0, 0) scale(1.3)', 'translate(' + parseInt(width) * 0.3 + 'px, 0) scale(1)']
+	        }, {
+	            duration: 4000,
+	            fill: 'forwards'
+	        }));
+	    }, 8400);
+	    animation.timersTimeout.push(timer10);
 	
 	    var timer1 = setTimeout(function () {
-	        addFullSizeImage(62);
-	        imgElements[62].querySelector('img').style.border = 'none';
-	        animation.anims.push(imgElements[62].animate({
-	            transform: ['translate(-' + parseInt(width) * 1.2 + 'px, 0)', 'translate(-' + parseInt(width) * 0.48 + 'px, 0)']
+	        var elem62 = document.createElement('div');
+	        elem62.style.width = parseInt(width) * 0.5 + 'px';
+	        elem62.style.height = height;
+	        elem62.style.background = 'url("./images/images(62).jpg") no-repeat 45% 50% /200%';
+	        elem62.style.position = 'absolute';
+	        container.appendChild(elem62);
+	        animation.anims.push(elem62.animate({
+	            transform: ['translate(-' + parseInt(width) * 0.6 + 'px, 0)', 'translate(0, 0)']
 	        }, {
 	            duration: 1300,
 	            fill: 'forwards'
 	        }));
-	    }, 8300);
+	    }, 11400);
 	    animation.timersTimeout.push(timer1);
 	
 	    return new Promise(function (resolve) {
@@ -9427,12 +9439,12 @@
 	            animation.anims.push(imgElements[63].animate({
 	                transform: ['translate(0, -' + parseInt(height) * 1.2 + 'px) scale(1.2)', 'translate(0, 0) scale(1.3)']
 	            }, {
-	                duration: 1000,
+	                duration: 800,
 	                fill: 'forwards'
 	            }));
-	            var timer3 = setTimeout(resolve, 3200);
+	            var timer3 = setTimeout(resolve, 3000);
 	            animation.timersTimeout.push(timer3);
-	        }, 10800);
+	        }, 14500);
 	        animation.timersTimeout.push(timer2);
 	    });
 	}
