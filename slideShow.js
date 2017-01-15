@@ -1313,48 +1313,46 @@ function episode14() {
     elem60.style.position = 'absolute';
     container.innerHTML = '';
     addFullSizeImage(58);
-    addFullSizeImage(59);
-    container.appendChild(elem60);
-
-    animation.anims.push(elem60.animate({
-        transform: [`scale(1)`, `scale(3)`],
-        opacity: [1, 1, 1, 0.5, 0]
-    }, {
-        duration: 1300,
-        delay: 700,
-        fill: 'forwards'
-    }));
-    imgElements[59].querySelector('img').style.border = 'none';
     imgElements[58].querySelector('img').style.border = 'none';
     animation.anims.push(imgElements[58].animate({
         transform: [
             `translate(-${parseInt(width) * 0.18}px, -${parseInt(height) * 0.15}px) scale(0.6) rotate(-10deg)`,
             `translate(-${parseInt(width) * 0.18}px, -${parseInt(height) * 0.15}px) scale(0.6) rotate(-10deg)`,
-            `translate(-${parseInt(width) * 0.18}px, -${parseInt(height) * 0.15}px) scale(0.6) rotate(7deg)`,
-            `translate(0, 0) scale(1) rotate(0)`,
+            `translate(-${parseInt(width) * 0.18}px, -${parseInt(height) * 0.15}px) scale(0.6) rotate(-10deg)`,
             `translate(0, 0) scale(1) rotate(0)`,
             `translate(0, 0) scale(1) rotate(0)`,
             'scale(2.8)'
         ],
-        opacity: [0, 1, 1]
+        opacity: [0, 0, 0, 0.2, 1, 1, 1]
     }, {
-        duration: 6200,
-        delay: 1300,
+        duration: 9200,
+        delay: 1800,
         fill: 'forwards'
     }));
+    addFullSizeImage(59);
+    container.appendChild(elem60);
+
+    animation.anims.push(elem60.animate({
+        transform: [`scale(1)`, `scale(3)`],
+        opacity: [1, 0]
+    }, {
+        duration: 3000,
+        delay: 500,
+        fill: 'forwards'
+    }));
+    imgElements[59].querySelector('img').style.border = 'none';
 
     animation.anims.push(imgElements[59].animate({
-        transform: [`translate(${parseInt(width) * 0.22}px, 0) scale(0.6) rotate(10deg)`,
-            `translate(${parseInt(width) * 0.22}px, 0) scale(0.6) rotate(10deg)`,
+        transform: [
             `translate(${parseInt(width) * 0.22}px, 0) scale(0.6) rotate(10deg)`,
             `translate(0, 0) scale(1) rotate(0deg)`,
             `translate(0, 0) scale(1) rotate(0deg)`,
             `translate(0, 0) scale(2.8) rotate(0deg)`
         ],
-        opacity: [0, 1, 0]
+        opacity: [0, 1, 1, 1, 0]
     }, {
-        duration: 3400,
-        delay: 500,
+        duration: 5000,
+        delay: 1800,
         fill: 'forwards'
     }));
 
@@ -1374,7 +1372,7 @@ function episode14() {
             duration: 4000,
             fill: 'forwards'
         }));
-    }, 8400);
+    }, 11500);
     animation.timersTimeout.push(timer10);
 
     const timer1 = setTimeout(() => {
@@ -1390,10 +1388,10 @@ function episode14() {
                 `translate(0, 0)`
             ]
         }, {
-            duration: 1300,
+            duration: 800,
             fill: 'forwards'
         }));
-    }, 11400);
+    }, 14600);
     animation.timersTimeout.push(timer1);
 
     return new Promise(resolve => {
@@ -1411,7 +1409,7 @@ function episode14() {
             }));
             const timer3 = setTimeout(resolve, 3000);
             animation.timersTimeout.push(timer3);
-        }, 14500);
+        }, 17000);
         animation.timersTimeout.push(timer2);
     });
 }
